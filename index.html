@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изучение китайских иероглифов</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>Китайские иероглифы</h1>
+            <div id="user-info"></div>
+        </header>
+
+        <main>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="my-characters">Мои иероглифы</button>
+                <button class="tab-btn" data-tab="add-character">Добавить</button>
+                <button class="tab-btn" data-tab="practice">Практика</button>
+            </div>
+
+            <div id="my-characters" class="tab-content active">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Поиск иероглифов...">
+                    <button id="search-btn">Найти</button>
+                </div>
+                <div id="characters-list" class="characters-grid"></div>
+            </div>
+
+            <div id="add-character" class="tab-content">
+                <form id="character-form">
+                    <div class="form-group">
+                        <label for="character">Иероглиф</label>
+                        <input type="text" id="character" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pinyin">Пиньин</label>
+                        <input type="text" id="pinyin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meaning">Значение</label>
+                        <input type="text" id="meaning" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="example">Пример</label>
+                        <input type="text" id="example">
+                    </div>
+                    <div class="form-group">
+                        <label for="example-meaning">Перевод примера</label>
+                        <input type="text" id="example-meaning">
+                    </div>
+                    <button type="submit" class="submit-btn">Сохранить</button>
+                </form>
+            </div>
+
+            <div id="practice" class="tab-content">
+                <div class="practice-mode">
+                    <h2>Режим практики</h2>
+                    <div class="mode-selector">
+                        <button class="mode-btn active" data-mode="meaning">Значение → Иероглиф</button>
+                        <button class="mode-btn" data-mode="character">Иероглиф → Значение</button>
+                    </div>
+                    <div id="practice-area">
+                        <div id="question-container"></div>
+                        <div id="options-container" class="options-grid"></div>
+                        <div id="result-message"></div>
+                        <button id="next-question" class="hidden">Следующий вопрос</button>
+                    </div>
+                    <div id="progress-container">
+                        <div id="progress-bar"></div>
+                        <span id="progress-text">0/0</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="character-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2 id="modal-title"></h2>
+                <div id="modal-character" class="big-character"></div>
+                <div class="character-info">
+                    <p><strong>Пиньин:</strong> <span id="modal-pinyin"></span></p>
+                    <p><strong>Значение:</strong> <span id="modal-meaning"></span></p>
+                    <p><strong>Пример:</strong> <span id="modal-example"></span></p>
+                    <p><strong>Перевод примера:</strong> <span id="modal-example-meaning"></span></p>
+                </div>
+                <button id="delete-character" class="danger-btn">Удалить иероглиф</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
