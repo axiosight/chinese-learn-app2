@@ -411,22 +411,24 @@
         dontKnowBtn.addEventListener('click', () => saveTestResult(false));
         nextTestBtn.addEventListener('click', loadRandomHanziForTest);
 
-        // Загрузка всех иероглифов
-        function loadAllHanzi() {
+        // В функции loadAllHanzi()
+        async function loadAllHanzi() {
             hanziContainer.innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
 
-            sendDataToBot({
-                action: 'get_all_hanzi'
-            }).then(data => {
-                if (data.status === 'success') {
-                    renderHanziList(data.data);
+            try {
+                const response = await sendDataToBot({
+                    action: 'get_all_hanzi'
+                });
+
+                if (response.status === 'success') {
+                    renderHanziList(response.data);
                 } else {
-                    hanziContainer.innerHTML = '<div class="error">Ошибка загрузки иероглифов</div>';
+                    showError('Ошибка загрузки иероглифов');
                 }
-            }).catch(error => {
+            } catch (error) {
                 console.error('Error loading hanzi:', error);
-                hanziContainer.innerHTML = '<div class="error">Ошибка загрузки иероглифов</div>';
-            });
+                showError('Ошибка соединения');
+            }
         }
 
         // Поиск иероглифов
@@ -450,7 +452,7 @@
 
         // Отображение списка иероглифов
         function renderHanziList(hanziList) {
-            if (hanziList.length === 0) {
+            if (!hanziList || hanziList.length === 0) {
                 hanziContainer.innerHTML = '<div class="loading">Иероглифы не найдены</div>';
                 return;
             }
@@ -461,13 +463,15 @@
                 const card = document.createElement('div');
                 card.className = 'hanzi-card';
                 card.innerHTML = `
-                    <div class="hanzi-character">${hanzi.character}</div>
-                    <div class="hanzi-pinyin">${hanzi.pinyin}</div>
-                    <div class="hanzi-meaning">${hanzi.meaning}</div>
-                    <button class="audio-btn" onclick="playAudio('${hanzi.audio_url}')">
-                        🔊
-                    </button>
-                `;
+            <div class="hanzi-character">${hanzi.character}</div>
+            <div class="hanzi-pinyin">${hanzi.pinyin}</div>
+            <div class="hanzi-meaning">${hanzi.meaning}</div>
+            ${hanzi.audio_url ?
+                        `<button class="audio-btn" onclick="playAudio('${hanzi.audio_url}')">
+                    🔊
+                </button>` : ''
+                    }
+        `;
                 hanziContainer.appendChild(card);
             });
         }
@@ -563,6 +567,7 @@
             const audio = new Audio(audioUrl);
             audio.play().catch(error => {
                 console.error('Error playing audio:', error);
+                alert('Ошибка воспроизведения аудио');
             });
         }
 
