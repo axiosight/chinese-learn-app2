@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,362 +7,141 @@
     <title>Китайские иероглифы</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Стили остаются без изменений */
-        :root {
-            --primary-color: #FF7B54;
-            --secondary-color: #FFB26B;
-            --accent-color: #FFD56F;
-            --light-color: #939B62;
-            --dark-color: #1B3C59;
-            --text-color: #333;
-            --bg-color: #f9f9f9;
-            --card-bg: #ffffff;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
             padding: 20px;
-            max-width: 100%;
-            overflow-x: hidden;
+            color: #333;
         }
-        .header {
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #e74c3c;
             text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .search-container {
+        .filter {
+            margin: 20px 0;
             display: flex;
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            background-color: var(--bg-color);
-            padding: 10px 0;
-            z-index: 100;
+            gap: 10px;
         }
-        .search-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid var(--light-color);
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s;
-            background-color: var(--card-bg);
+        select, button {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
         }
-        .search-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 8px rgba(255, 123, 84, 0.3);
-        }
-        .search-type {
-            margin-left: 10px;
-            padding: 0 15px;
-            border-radius: 25px;
-            border: 2px solid var(--light-color);
-            background-color: var(--card-bg);
-            font-size: 16px;
-            outline: none;
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
             cursor: pointer;
         }
-        .characters-grid {
+        .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            padding: 5px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
         }
-        .character-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 180px;
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
-        .character-card:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
         .character {
             font-size: 48px;
-            margin-bottom: 10px;
-            color: var(--dark-color);
+            text-align: center;
+            margin: 10px 0;
+            color: #e74c3c;
         }
         .pinyin {
             font-size: 18px;
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-bottom: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #3498db;
         }
         .translation {
-            font-size: 14px;
-            color: var(--text-color);
+            text-align: center;
+            color: #666;
         }
         .category {
-            margin-top: 10px;
-            font-size: 12px;
-            padding: 3px 8px;
-            background-color: var(--accent-color);
-            color: var(--dark-color);
-            border-radius: 10px;
             display: inline-block;
-        }
-        .loading {
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            color: var(--light-color);
-        }
-        .no-results {
-            text-align: center;
-            padding: 30px;
-            font-size: 16px;
-            color: var(--light-color);
-            grid-column: 1 / -1;
-        }
-        @media (max-width: 600px) {
-            .characters-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-            .character {
-                font-size: 36px;
-            }
-            .pinyin {
-                font-size: 16px;
-            }
+            background: #eee;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="container">
         <h1>Китайские иероглифы</h1>
-        <p>Изучайте и запоминайте основные иероглифы</p>
-    </div>
-    
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Поиск иероглифов..." id="searchInput">
-        <select class="search-type" id="searchType">
-            <option value="all">Все</option>
-            <option value="character">Иероглиф</option>
-            <option value="pinyin">Пиньинь</option>
-            <option value="translation">Перевод</option>
-        </select>
-    </div>
-    
-    <div class="characters-grid" id="charactersGrid">
-        <div class="loading">Загрузка иероглифов...</div>
+        
+        <div class="filter">
+            <select id="categoryFilter">
+                <option value="">Все категории</option>
+                <option value="базовые">Базовые</option>
+                <option value="природа">Природа</option>
+                <option value="чувства">Чувства</option>
+                <option value="описательные">Описательные</option>
+            </select>
+            <button onclick="loadCharacters()">Показать</button>
+        </div>
+        
+        <div class="cards" id="cardsContainer"></div>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        
-        // Включим расширенное логирование для отладки
-        const debug = true;
-        function log(...args) {
-            if (debug) console.log('[DEBUG]', ...args);
-        }
-        
-        let allCharacters = [];
-        let filteredCharacters = [];
-        let currentRequestId = 0;
-        
-        // Функция для отправки запроса боту и ожидания ответа
-        async function sendRequestToBot(action, params = {}) {
-            const requestId = ++currentRequestId;
-            log(`Отправка запроса #${requestId}`, { action, params });
-            
-            return new Promise((resolve) => {
-                // Создаем уникальный обработчик для этого запроса
-                const responseHandler = (eventData) => {
-                    try {
-                        const data = JSON.parse(eventData);
-                        if (data.requestId === requestId) {
-                            log(`Получен ответ #${requestId}`, data);
-                            Telegram.WebApp.offEvent('web_app_data_received', responseHandler);
-                            resolve(data);
-                        }
-                    } catch (e) {
-                        log('Ошибка обработки ответа', e);
-                        resolve({
-                            status: 'error',
-                            message: 'Ошибка обработки ответа'
-                        });
-                    }
-                };
-                
-                // Регистрируем обработчик
-                Telegram.WebApp.onEvent('web_app_data_received', responseHandler);
-                
-                // Отправляем запрос
-                tg.sendData(JSON.stringify({
-                    action,
-                    params,
-                    requestId
-                }));
-                
-                // Таймаут на случай отсутствия ответа
-                setTimeout(() => {
-                    Telegram.WebApp.offEvent('web_app_data_received', responseHandler);
-                    log(`Таймаут запроса #${requestId}`);
-                    resolve({
-                        status: 'error',
-                        message: 'Таймаут ожидания ответа'
-                    });
-                }, 5000);
-            });
-        }
-        
-        // Получение иероглифов от бота
-        async function fetchCharacters() {
-            showLoading('Загрузка иероглифов...');
+        async function loadCharacters() {
+            const category = document.getElementById("categoryFilter").value;
+            let url = "/api/characters";
+            if (category) {
+                url += `?category=${encodeURIComponent(category)}`;
+            }
             
             try {
-                const response = await sendRequestToBot('get_characters');
-                
-                if (response.status === 'success') {
-                    return response.data || [];
-                } else {
-                    showError(response.message || 'Ошибка загрузки');
-                    return getFallbackCharacters();
-                }
+                const response = await fetch(url);
+                const characters = await response.json();
+                displayCharacters(characters);
             } catch (error) {
-                log('Ошибка при загрузке:', error);
-                showError('Ошибка соединения');
-                return getFallbackCharacters();
+                console.error("Ошибка при загрузке иероглифов:", error);
             }
         }
         
-        // Поиск иероглифов
-        async function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const searchType = document.getElementById('searchType').value;
+        function displayCharacters(characters) {
+            const container = document.getElementById("cardsContainer");
+            container.innerHTML = "";
             
-            showLoading('Поиск...');
-            
-            try {
-                const response = await sendRequestToBot('search_characters', {
-                    query,
-                    searchType
-                });
-                
-                if (response.status === 'success') {
-                    filteredCharacters = response.data || [];
-                    renderCharacters();
-                } else {
-                    showError(response.message || 'Ошибка поиска');
-                    // Локальный фильтр как запасной вариант
-                    filteredCharacters = allCharacters.filter(char => 
-                        localSearch(char, query, searchType)
-                    );
-                    renderCharacters();
-                }
-            } catch (error) {
-                log('Ошибка поиска:', error);
-                showError('Ошибка соединения');
-            }
-        }
-        
-        // Локальный поиск (запасной вариант)
-        function localSearch(char, query, searchType) {
-            if (!query) return true;
-            
-            const fields = {
-                'all': ['character', 'pinyin', 'translation'],
-                'character': ['character'],
-                'pinyin': ['pinyin'],
-                'translation': ['translation']
-            }[searchType] || ['character', 'pinyin', 'translation'];
-            
-            return fields.some(field => 
-                String(char[field]).toLowerCase().includes(query)
-            );
-        }
-        
-        // Запасные данные
-        function getFallbackCharacters() {
-            return [
-                {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
-                {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
-                {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
-                {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
-                {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
-                {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
-                {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
-                {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
-                {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
-                {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
-            ];
-        }
-        
-        // Отображение загрузки
-        function showLoading(message) {
-            document.getElementById('charactersGrid').innerHTML = `
-                <div class="loading">${message}</div>
-            `;
-        }
-        
-        // Отображение ошибки
-        function showError(message) {
-            document.getElementById('charactersGrid').innerHTML = `
-                <div class="no-results">${message}</div>
-            `;
-        }
-        
-        // Отрисовка иероглифов
-        function renderCharacters() {
-            const grid = document.getElementById('charactersGrid');
-            
-            if (!filteredCharacters.length) {
-                showError('Ничего не найдено');
+            if (characters.length === 0) {
+                container.innerHTML = "<p>Иероглифы не найдены</p>";
                 return;
             }
             
-            grid.innerHTML = filteredCharacters.map(char => `
-                <div class="character-card">
+            characters.forEach(char => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
                     <div class="character">${char.character}</div>
                     <div class="pinyin">${char.pinyin}</div>
                     <div class="translation">${char.translation}</div>
                     <div class="category">${char.category}</div>
-                </div>
-            `).join('');
+                `;
+                container.appendChild(card);
+            });
         }
         
-        // Инициализация приложения
-        async function initApp() {
-            // Проверяем, что мы внутри Telegram WebApp
-            if (!window.Telegram || !window.Telegram.WebApp) {
-                showError('Приложение должно быть запущено в Telegram');
-                return;
-            }
-            
-            // Загружаем данные
-            allCharacters = await fetchCharacters();
-            filteredCharacters = [...allCharacters];
-            renderCharacters();
-            
-            // Настраиваем обработчики
-            document.getElementById('searchInput').addEventListener('input', handleSearch);
-            document.getElementById('searchType').addEventListener('change', handleSearch);
-            
-            log('Приложение инициализировано');
-        }
+        // Загружаем иероглифы при открытии
+        document.addEventListener("DOMContentLoaded", loadCharacters);
         
-        // Запускаем приложение
-        document.addEventListener('DOMContentLoaded', initApp);
+        // Инициализация Telegram WebApp
+        Telegram.WebApp.expand();
+        Telegram.WebApp.ready();
     </script>
 </body>
 </html>
