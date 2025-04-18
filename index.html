@@ -183,102 +183,98 @@
         <div class="loading">Загрузка иероглифов...</div>
     </div>
     
-    <script>
+<script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        
+
         let allCharacters = [];
         let filteredCharacters = [];
-        
-        // Получаем данные от бота
-        async function fetchCharacters() {
+
+        // Функция для отправки запроса к боту
+        async function sendRequestToBot(method, params = {}) {
             try {
-                const response = await fetch(`https://api.telegram.org/bot${tg.initDataUnsafe.query_id}/api`, {
+                // Добавляем user_id к параметрам
+                params.user_id = tg.initDataUnsafe.user.id;
+
+                const response = await fetch(`https://api.telegram.org/bot${tg.initData}/sendMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        user_id: tg.initDataUnsafe.user.id
+                        chat_id: tg.initDataUnsafe.user.id,
+                        text: `/get_characters ${JSON.stringify(params)}`
                     })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Ошибка загрузки данных');
                 }
-                
-                return await response.json();
+
+                const data = await response.json();
+                return JSON.parse(data.result.text);
             } catch (error) {
                 console.error('Error:', error);
                 return [];
             }
         }
-        
+
+        // Получаем данные от бота
+        async function fetchCharacters() {
+            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
+
+            try {
+                const characters = await sendRequestToBot('get_characters');
+                return characters;
+            } catch (error) {
+                console.error('Failed to fetch characters:', error);
+                return [];
+            }
+        }
+
         // Инициализация приложения
         async function initApp() {
-            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
-            
-            // В реальном приложении здесь будет запрос к вашему боту
             allCharacters = await fetchCharacters();
-            
-            // Для демонстрации используем mock-данные
-            //allCharacters = [
-            //    {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
-            //    {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
-            //    {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
-            //    {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
-            //    {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
-           //     {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
-           //     {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
-            //    {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
-            //    {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
-             //   {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
-           // ];
-            
             filteredCharacters = [...allCharacters];
             renderCharacters();
-            
+
             // Настройка поиска
             document.getElementById('searchInput').addEventListener('input', handleSearch);
             document.getElementById('searchType').addEventListener('change', handleSearch);
         }
-        
-        // Обработка поиска
-        function handleSearch() {
+
+        // Обработка поиска с запросом к боту
+        async function handleSearch() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const searchType = document.getElementById('searchType').value;
-            
-            if (!query) {
-                filteredCharacters = [...allCharacters];
-            } else {
-                filteredCharacters = allCharacters.filter(char => {
-                    if (searchType === 'all') {
-                        return char.character.toLowerCase().includes(query) || 
-                               char.pinyin.toLowerCase().includes(query) || 
-                               char.translation.toLowerCase().includes(query);
-                    } else if (searchType === 'character') {
-                        return char.character.toLowerCase().includes(query);
-                    } else if (searchType === 'pinyin') {
-                        return char.pinyin.toLowerCase().includes(query);
-                    } else if (searchType === 'translation') {
-                        return char.translation.toLowerCase().includes(query);
-                    }
-                    return true;
-                });
+
+            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Поиск...</div>';
+
+            try {
+                const searchParams = {};
+                if (query) {
+                    searchParams.query = query;
+                    searchParams.search_type = searchType;
+                }
+
+                filteredCharacters = await sendRequestToBot('get_characters', searchParams);
+                renderCharacters();
+            } catch (error) {
+                console.error('Search failed:', error);
+                document.getElementById('charactersGrid').innerHTML =
+                    '<div class="no-results">Ошибка при поиске. Пожалуйста, попробуйте позже.</div>';
             }
-            
-            renderCharacters();
         }
-        
-        // Отрисовка иероглифов
+
+        // Отрисовка иероглифов (без изменений)
         function renderCharacters() {
             const grid = document.getElementById('charactersGrid');
-            
+
             if (filteredCharacters.length === 0) {
                 grid.innerHTML = '<div class="no-results">Ничего не найдено. Попробуйте изменить запрос.</div>';
                 return;
             }
-            
+
             grid.innerHTML = filteredCharacters.map(char => `
                 <div class="character-card">
                     <div class="character">${char.character}</div>
@@ -288,7 +284,7 @@
                 </div>
             `).join('');
         }
-        
+
         // Запуск приложения
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
