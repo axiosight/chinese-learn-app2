@@ -219,21 +219,21 @@
             document.getElementById('charactersGrid').innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
             
             // В реальном приложении здесь будет запрос к вашему боту
-            // allCharacters = await fetchCharacters();
+            allCharacters = await fetchCharacters();
             
             // Для демонстрации используем mock-данные
-            allCharacters = [
-                {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
-                {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
-                {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
-                {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
-                {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
-                {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
-                {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
-                {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
-                {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
-                {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
-            ];
+            //allCharacters = [
+            //    {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
+            //    {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
+            //    {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
+            //    {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
+            //    {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
+           //     {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
+           //     {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
+            //    {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
+            //    {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
+             //   {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
+           // ];
             
             filteredCharacters = [...allCharacters];
             renderCharacters();
