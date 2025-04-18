@@ -1,616 +1,296 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Изучение китайских иероглифов</title>
+    <title>Китайские иероглифы</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #8BC34A;
-            --accent-color: #FFC107;
-            --dark-color: #333;
-            --light-color: #f5f5f5;
-            --error-color: #F44336;
-            --success-color: #4CAF50;
+            --primary-color: #FF7B54;
+            --secondary-color: #FFB26B;
+            --accent-color: #FFD56F;
+            --light-color: #939B62;
+            --dark-color: #1B3C59;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
         }
-
+        
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            line-height: 1.6;
-        }
-
-        .container {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
             max-width: 100%;
-            padding: 15px;
-            margin: 0 auto;
+            overflow-x: hidden;
         }
-
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 0;
+        
+        .header {
             text-align: center;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
-            font-size: 1.5rem;
-        }
-
-        .tabs {
+        
+        .search-container {
             display: flex;
-            justify-content: space-around;
             margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            padding: 10px 0;
+            z-index: 100;
         }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--dark-color);
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .search-box {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--light-color);
             border-radius: 25px;
-            font-size: 1rem;
+            font-size: 16px;
             outline: none;
             transition: all 0.3s;
+            background-color: var(--card-bg);
         }
-
-        .search-box input:focus {
+        
+        .search-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 0 8px rgba(255, 123, 84, 0.3);
         }
-
-        .hanzi-list {
+        
+        .search-type {
+            margin-left: 10px;
+            padding: 0 15px;
+            border-radius: 25px;
+            border: 2px solid var(--light-color);
+            background-color: var(--card-bg);
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .characters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            padding: 5px;
         }
-
-        .hanzi-card {
-            background: white;
-            border-radius: 10px;
+        
+        .character-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 180px;
         }
-
-        .hanzi-card:hover {
+        
+        .character-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
-
-        .hanzi-character {
-            font-size: 2.5rem;
+        
+        .character {
+            font-size: 48px;
             margin-bottom: 10px;
             color: var(--dark-color);
         }
-
-        .hanzi-pinyin {
+        
+        .pinyin {
+            font-size: 18px;
             color: var(--primary-color);
             font-weight: bold;
             margin-bottom: 5px;
         }
-
-        .hanzi-meaning {
-            font-size: 0.9rem;
-            color: #666;
+        
+        .translation {
+            font-size: 14px;
+            color: var(--text-color);
         }
-
-        .audio-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px auto 0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .audio-btn:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .test-card {
-            background: white;
+        
+        .category {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 3px 8px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
             border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            display: inline-block;
         }
-
-        .test-character {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .test-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .test-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .know-btn {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .dont-know-btn {
-            background-color: var(--error-color);
-            color: white;
-        }
-
-        .stats-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-
-        .stat-known {
-            color: var(--success-color);
-        }
-
-        .stat-unknown {
-            color: var(--error-color);
-        }
-
-        .stat-tested {
-            color: var(--primary-color);
-        }
-
-        .stats-details {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .stats-table th,
-        .stats-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .stats-table th {
-            background-color: #f5f5f5;
-        }
-
-        .known-true {
-            color: var(--success-color);
-        }
-
-        .known-false {
-            color: var(--error-color);
-        }
-
+        
         .loading {
             text-align: center;
             padding: 20px;
-            color: #666;
+            font-size: 18px;
+            color: var(--light-color);
         }
-
-        .hidden {
-            display: none;
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            font-size: 16px;
+            color: var(--light-color);
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 600px) {
+            .characters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .character {
+                font-size: 36px;
+            }
+            
+            .pinyin {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1>Изучение китайских иероглифов</h1>
-        </header>
-
-        <div class="tabs">
-            <div class="tab active" data-tab="all">Все иероглифы</div>
-            <div class="tab" data-tab="test">Тест</div>
-            <div class="tab" data-tab="stats">Статистика</div>
-        </div>
-
-        <div id="all" class="tab-content active">
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Поиск по иероглифу, пиньиню или переводу...">
-            </div>
-            <div id="hanzi-container" class="hanzi-list">
-                <!-- Иероглифы будут загружены здесь -->
-                <div class="loading">Загрузка иероглифов...</div>
-            </div>
-        </div>
-
-        <div id="test" class="tab-content">
-            <div class="test-card">
-                <div id="test-character" class="test-character">?</div>
-                <p>Как читается этот иероглиф?</p>
-                <div class="test-buttons">
-                    <button id="know-btn" class="test-btn know-btn">Знаю</button>
-                    <button id="dont-know-btn" class="test-btn dont-know-btn">Не знаю</button>
-                </div>
-            </div>
-            <button id="next-test-btn" class="test-btn"
-                style="width: 100%; background-color: var(--accent-color);">Следующий иероглиф</button>
-        </div>
-
-        <div id="stats" class="tab-content">
-            <div class="stats-summary">
-                <div class="stat-card">
-                    <div>Знаю</div>
-                    <div id="known-count" class="stat-value stat-known">0</div>
-                </div>
-                <div class="stat-card">
-                    <div>Не знаю</div>
-                    <div id="unknown-count" class="stat-value stat-unknown">0</div>
-                </div>
-                <div class="stat-card">
-                    <div>Всего тестов</div>
-                    <div id="tested-count" class="stat-value stat-tested">0</div>
-                </div>
-            </div>
-
-            <div class="stats-details">
-                <h3>Детальная статистика</h3>
-                <table class="stats-table">
-                    <thead>
-                        <tr>
-                            <th>Иероглиф</th>
-                            <th>Пиньинь</th>
-                            <th>Значение</th>
-                            <th>Результат</th>
-                            <th>Дата</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stats-details-body">
-                        <!-- Статистика будет загружена здесь -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="header">
+        <h1>Китайские иероглифы</h1>
+        <p>Изучайте и запоминайте основные иероглифы</p>
     </div>
-
+    
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Поиск иероглифов..." id="searchInput">
+        <select class="search-type" id="searchType">
+            <option value="all">Все</option>
+            <option value="character">Иероглиф</option>
+            <option value="pinyin">Пиньинь</option>
+            <option value="translation">Перевод</option>
+        </select>
+    </div>
+    
+    <div class="characters-grid" id="charactersGrid">
+        <div class="loading">Загрузка иероглифов...</div>
+    </div>
+    
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
-
-        // Текущий тестовый иероглиф
-        let currentTestHanzi = null;
-
-        // Элементы DOM
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const searchInput = document.getElementById('search-input');
-        const hanziContainer = document.getElementById('hanzi-container');
-        const testCharacter = document.getElementById('test-character');
-        const knowBtn = document.getElementById('know-btn');
-        const dontKnowBtn = document.getElementById('dont-know-btn');
-        const nextTestBtn = document.getElementById('next-test-btn');
-        const knownCount = document.getElementById('known-count');
-        const unknownCount = document.getElementById('unknown-count');
-        const testedCount = document.getElementById('tested-count');
-        const statsDetailsBody = document.getElementById('stats-details-body');
-
-        // Переключение вкладок
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
-
-                // При переключении на вкладку загружаем соответствующие данные
-                if (tab.dataset.tab === 'all') {
-                    loadAllHanzi();
-                } else if (tab.dataset.tab === 'test') {
-                    loadRandomHanziForTest();
-                } else if (tab.dataset.tab === 'stats') {
-                    loadUserStats();
-                }
-            });
-        });
-
-        // Поиск иероглифов
-        searchInput.addEventListener('input', debounce(() => {
-            const query = searchInput.value.trim();
-
-            if (query.length === 0) {
-                loadAllHanzi();
-            } else {
-                searchHanzi(query);
-            }
-        }, 300));
-
-        // Обработчики кнопок теста
-        knowBtn.addEventListener('click', () => saveTestResult(true));
-        dontKnowBtn.addEventListener('click', () => saveTestResult(false));
-        nextTestBtn.addEventListener('click', loadRandomHanziForTest);
-
-        // В функции loadAllHanzi()
-        async function loadAllHanzi() {
-            hanziContainer.innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
-
+        
+        let allCharacters = [];
+        let filteredCharacters = [];
+        
+        // Получаем данные от бота
+        async function fetchCharacters() {
             try {
-                const response = await sendDataToBot({
-                    action: 'get_all_hanzi'
+                const response = await fetch(`https://api.telegram.org/bot${tg.initDataUnsafe.query_id}/api`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: tg.initDataUnsafe.user.id
+                    })
                 });
-
-                if (response.status === 'success') {
-                    renderHanziList(response.data);
-                } else {
-                    showError('Ошибка загрузки иероглифов');
+                
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных');
                 }
+                
+                return await response.json();
             } catch (error) {
-                console.error('Error loading hanzi:', error);
-                showError('Ошибка соединения');
+                console.error('Error:', error);
+                return [];
             }
         }
-
-        // Поиск иероглифов
-        function searchHanzi(query) {
-            hanziContainer.innerHTML = '<div class="loading">Поиск иероглифов...</div>';
-
-            sendDataToBot({
-                action: 'search_hanzi',
-                query: query
-            }).then(data => {
-                if (data.status === 'success') {
-                    renderHanziList(data.data);
-                } else {
-                    hanziContainer.innerHTML = '<div class="error">Ошибка поиска</div>';
-                }
-            }).catch(error => {
-                console.error('Error searching hanzi:', error);
-                hanziContainer.innerHTML = '<div class="error">Ошибка поиска</div>';
-            });
-        }
-
-        // Отображение списка иероглифов
-        function renderHanziList(hanziList) {
-            if (!hanziList || hanziList.length === 0) {
-                hanziContainer.innerHTML = '<div class="loading">Иероглифы не найдены</div>';
-                return;
-            }
-
-            hanziContainer.innerHTML = '';
-
-            hanziList.forEach(hanzi => {
-                const card = document.createElement('div');
-                card.className = 'hanzi-card';
-                card.innerHTML = `
-            <div class="hanzi-character">${hanzi.character}</div>
-            <div class="hanzi-pinyin">${hanzi.pinyin}</div>
-            <div class="hanzi-meaning">${hanzi.meaning}</div>
-            ${hanzi.audio_url ?
-                        `<button class="audio-btn" onclick="playAudio('${hanzi.audio_url}')">
-                    🔊
-                </button>` : ''
-                    }
-        `;
-                hanziContainer.appendChild(card);
-            });
-        }
-
-        // Загрузка случайного иероглифа для теста
-        function loadRandomHanziForTest() {
-            testCharacter.textContent = '...';
-
-            sendDataToBot({
-                action: 'get_random_hanzi_for_test'
-            }).then(data => {
-                if (data.status === 'success') {
-                    currentTestHanzi = data.data;
-                    testCharacter.textContent = currentTestHanzi.character;
-                } else {
-                    testCharacter.textContent = 'Ошибка';
-                }
-            }).catch(error => {
-                console.error('Error loading test hanzi:', error);
-                testCharacter.textContent = 'Ошибка';
-            });
-        }
-
-        // Сохранение результата теста
-        function saveTestResult(known) {
-            if (!currentTestHanzi) return;
-
-            sendDataToBot({
-                action: 'save_test_result',
-                hanzi_id: currentTestHanzi.id,
-                known: known
-            }).then(data => {
-                if (data.status === 'success') {
-                    // Загружаем следующий иероглиф
-                    loadRandomHanziForTest();
-                }
-            }).catch(error => {
-                console.error('Error saving test result:', error);
-            });
-        }
-
-        // Загрузка статистики пользователя
-        function loadUserStats() {
-            sendDataToBot({
-                action: 'get_user_stats'
-            }).then(data => {
-                if (data.status === 'success') {
-                    updateStatsSummary(data.data.summary);
-                    renderStatsDetails(data.data.detailed_stats);
-                }
-            }).catch(error => {
-                console.error('Error loading user stats:', error);
-            });
-        }
-
-        // Обновление сводной статистики
-        function updateStatsSummary(summary) {
-            knownCount.textContent = summary.total_known;
-            unknownCount.textContent = summary.total_unknown;
-            testedCount.textContent = summary.total_tested;
-        }
-
-        // Отображение детальной статистики
-        function renderStatsDetails(stats) {
-            statsDetailsBody.innerHTML = '';
-
-            if (stats.length === 0) {
-                statsDetailsBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center;">Вы еще не проходили тесты</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            stats.forEach(stat => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${stat.character}</td>
-                    <td>${stat.pinyin}</td>
-                    <td>${stat.meaning}</td>
-                    <td class="known-${stat.known}">${stat.known ? 'Знаю' : 'Не знаю'}</td>
-                    <td>${new Date(stat.last_tested).toLocaleDateString()}</td>
-                `;
-                statsDetailsBody.appendChild(row);
-            });
-        }
-
-        // Воспроизведение аудио
-        function playAudio(audioUrl) {
-            if (!audioUrl) return;
-
-            const audio = new Audio(audioUrl);
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert('Ошибка воспроизведения аудио');
-            });
-        }
-
-        // Отправка данных в бот
-        function sendDataToBot(data) {
-            return new Promise((resolve, reject) => {
-                tg.sendData(JSON.stringify(data));
-
-                // Обработка ответа от бота
-                const handleMessage = (event) => {
-                    try {
-                        const response = JSON.parse(event.data);
-                        if (response.status) {
-                            window.removeEventListener('message', handleMessage);
-                            resolve(response);
-                        }
-                    } catch (error) {
-                        window.removeEventListener('message', handleMessage);
-                        reject(error);
-                    }
-                };
-
-                window.addEventListener('message', handleMessage);
-            });
-        }
-
-        // Дебаунс для поиска
-        function debounce(func, wait) {
-            let timeout;
-            return function () {
-                const context = this, args = arguments;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    func.apply(context, args);
-                }, wait);
-            };
-        }
-
+        
         // Инициализация приложения
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllHanzi();
-        });
+        async function initApp() {
+            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
+            
+            // В реальном приложении здесь будет запрос к вашему боту
+            // allCharacters = await fetchCharacters();
+            
+            // Для демонстрации используем mock-данные
+            allCharacters = [
+                {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
+                {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
+                {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
+                {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
+                {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
+                {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
+                {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
+                {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
+                {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
+                {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
+            ];
+            
+            filteredCharacters = [...allCharacters];
+            renderCharacters();
+            
+            // Настройка поиска
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('searchType').addEventListener('change', handleSearch);
+        }
+        
+        // Обработка поиска
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const searchType = document.getElementById('searchType').value;
+            
+            if (!query) {
+                filteredCharacters = [...allCharacters];
+            } else {
+                filteredCharacters = allCharacters.filter(char => {
+                    if (searchType === 'all') {
+                        return char.character.toLowerCase().includes(query) || 
+                               char.pinyin.toLowerCase().includes(query) || 
+                               char.translation.toLowerCase().includes(query);
+                    } else if (searchType === 'character') {
+                        return char.character.toLowerCase().includes(query);
+                    } else if (searchType === 'pinyin') {
+                        return char.pinyin.toLowerCase().includes(query);
+                    } else if (searchType === 'translation') {
+                        return char.translation.toLowerCase().includes(query);
+                    }
+                    return true;
+                });
+            }
+            
+            renderCharacters();
+        }
+        
+        // Отрисовка иероглифов
+        function renderCharacters() {
+            const grid = document.getElementById('charactersGrid');
+            
+            if (filteredCharacters.length === 0) {
+                grid.innerHTML = '<div class="no-results">Ничего не найдено. Попробуйте изменить запрос.</div>';
+                return;
+            }
+            
+            grid.innerHTML = filteredCharacters.map(char => `
+                <div class="character-card">
+                    <div class="character">${char.character}</div>
+                    <div class="pinyin">${char.pinyin}</div>
+                    <div class="translation">${char.translation}</div>
+                    <div class="category">${char.category}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Запуск приложения
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-
 </html>
