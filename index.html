@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Китайские иероглифы</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Стили остаются без изменений */
         :root {
             --primary-color: #FF7B54;
             --secondary-color: #FFB26B;
@@ -17,14 +17,12 @@
             --bg-color: #f9f9f9;
             --card-bg: #ffffff;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -32,7 +30,6 @@
             max-width: 100%;
             overflow-x: hidden;
         }
-
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -42,7 +39,6 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         .search-container {
             display: flex;
             margin-bottom: 20px;
@@ -52,7 +48,6 @@
             padding: 10px 0;
             z-index: 100;
         }
-
         .search-input {
             flex: 1;
             padding: 12px 15px;
@@ -63,12 +58,10 @@
             transition: all 0.3s;
             background-color: var(--card-bg);
         }
-
         .search-input:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 8px rgba(255, 123, 84, 0.3);
         }
-
         .search-type {
             margin-left: 10px;
             padding: 0 15px;
@@ -79,14 +72,12 @@
             outline: none;
             cursor: pointer;
         }
-
         .characters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
             padding: 5px;
         }
-
         .character-card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -100,30 +91,25 @@
             justify-content: space-between;
             min-height: 180px;
         }
-
         .character-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
-
         .character {
             font-size: 48px;
             margin-bottom: 10px;
             color: var(--dark-color);
         }
-
         .pinyin {
             font-size: 18px;
             color: var(--primary-color);
             font-weight: bold;
             margin-bottom: 5px;
         }
-
         .translation {
             font-size: 14px;
             color: var(--text-color);
         }
-
         .category {
             margin-top: 10px;
             font-size: 12px;
@@ -133,14 +119,12 @@
             border-radius: 10px;
             display: inline-block;
         }
-
         .loading {
             text-align: center;
             padding: 20px;
             font-size: 18px;
             color: var(--light-color);
         }
-
         .no-results {
             text-align: center;
             padding: 30px;
@@ -148,29 +132,25 @@
             color: var(--light-color);
             grid-column: 1 / -1;
         }
-
         @media (max-width: 600px) {
             .characters-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
-
             .character {
                 font-size: 36px;
             }
-
             .pinyin {
                 font-size: 16px;
             }
         }
     </style>
 </head>
-
 <body>
     <div class="header">
         <h1>Китайские иероглифы</h1>
         <p>Изучайте и запоминайте основные иероглифы</p>
     </div>
-
+    
     <div class="search-container">
         <input type="text" class="search-input" placeholder="Поиск иероглифов..." id="searchInput">
         <select class="search-type" id="searchType">
@@ -180,7 +160,7 @@
             <option value="translation">Перевод</option>
         </select>
     </div>
-
+    
     <div class="characters-grid" id="charactersGrid">
         <div class="loading">Загрузка иероглифов...</div>
     </div>
@@ -188,126 +168,168 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-
+        
+        // Включим расширенное логирование для отладки
+        const debug = true;
+        function log(...args) {
+            if (debug) console.log('[DEBUG]', ...args);
+        }
+        
         let allCharacters = [];
         let filteredCharacters = [];
-
-        // Функция для отправки данных боту через WebApp
-        async function sendDataToBot(data) {
+        let currentRequestId = 0;
+        
+        // Функция для отправки запроса боту и ожидания ответа
+        async function sendRequestToBot(action, params = {}) {
+            const requestId = ++currentRequestId;
+            log(`Отправка запроса #${requestId}`, { action, params });
+            
             return new Promise((resolve) => {
-                tg.sendData(JSON.stringify(data));
-
-                // Обработчик ответа от бота
-                Telegram.WebApp.onEvent('web_app_data_sent', function () {
-                    resolve(true);
-                });
+                // Создаем уникальный обработчик для этого запроса
+                const responseHandler = (eventData) => {
+                    try {
+                        const data = JSON.parse(eventData);
+                        if (data.requestId === requestId) {
+                            log(`Получен ответ #${requestId}`, data);
+                            Telegram.WebApp.offEvent('web_app_data_received', responseHandler);
+                            resolve(data);
+                        }
+                    } catch (e) {
+                        log('Ошибка обработки ответа', e);
+                        resolve({
+                            status: 'error',
+                            message: 'Ошибка обработки ответа'
+                        });
+                    }
+                };
+                
+                // Регистрируем обработчик
+                Telegram.WebApp.onEvent('web_app_data_received', responseHandler);
+                
+                // Отправляем запрос
+                tg.sendData(JSON.stringify({
+                    action,
+                    params,
+                    requestId
+                }));
+                
+                // Таймаут на случай отсутствия ответа
+                setTimeout(() => {
+                    Telegram.WebApp.offEvent('web_app_data_received', responseHandler);
+                    log(`Таймаут запроса #${requestId}`);
+                    resolve({
+                        status: 'error',
+                        message: 'Таймаут ожидания ответа'
+                    });
+                }, 5000);
             });
         }
-
-        // Функция для получения данных от бота
-        async function getCharactersFromBot(searchParams = {}) {
-            try {
-                // Отправляем запрос боту
-                await sendDataToBot({
-                    action: 'get_characters',
-                    ...searchParams
-                });
-
-                // В реальном приложении здесь должен быть механизм получения ответа от бота
-                // Для примера используем заглушку с таймаутом
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve(getFallbackCharacters());
-                    }, 500);
-                });
-
-            } catch (error) {
-                console.error('Ошибка при запросе к боту:', error);
-                return getFallbackCharacters();
-            }
-        }
-
-        // Запасные данные на случай ошибки
-        function getFallbackCharacters() {
-            return [
-                { id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый' },
-                { id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый' },
-                { id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый' },
-                { id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый' },
-                { id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа' },
-                { id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа' },
-                { id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа' },
-                { id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа' },
-                { id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные' },
-                { id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные' }
-            ];
-        }
-
-        // Получаем данные от бота
+        
+        // Получение иероглифов от бота
         async function fetchCharacters() {
-            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Загрузка иероглифов...</div>';
-
+            showLoading('Загрузка иероглифов...');
+            
             try {
-                const characters = await getCharactersFromBot();
-                return characters;
+                const response = await sendRequestToBot('get_characters');
+                
+                if (response.status === 'success') {
+                    return response.data || [];
+                } else {
+                    showError(response.message || 'Ошибка загрузки');
+                    return getFallbackCharacters();
+                }
             } catch (error) {
-                console.error('Ошибка при загрузке иероглифов:', error);
+                log('Ошибка при загрузке:', error);
+                showError('Ошибка соединения');
                 return getFallbackCharacters();
             }
         }
-
-        // Обработка поиска
+        
+        // Поиск иероглифов
         async function handleSearch() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const searchType = document.getElementById('searchType').value;
-
-            document.getElementById('charactersGrid').innerHTML = '<div class="loading">Поиск...</div>';
-
+            
+            showLoading('Поиск...');
+            
             try {
-                const searchParams = {};
-                if (query) {
-                    searchParams.query = query;
-                    searchParams.search_type = searchType;
+                const response = await sendRequestToBot('search_characters', {
+                    query,
+                    searchType
+                });
+                
+                if (response.status === 'success') {
+                    filteredCharacters = response.data || [];
+                    renderCharacters();
+                } else {
+                    showError(response.message || 'Ошибка поиска');
+                    // Локальный фильтр как запасной вариант
+                    filteredCharacters = allCharacters.filter(char => 
+                        localSearch(char, query, searchType)
+                    );
+                    renderCharacters();
                 }
-
-                filteredCharacters = await getCharactersFromBot(searchParams);
-
-                // Если не получили результаты от бота, фильтруем локально
-                if (!filteredCharacters || filteredCharacters.length === 0) {
-                    filteredCharacters = allCharacters.filter(char => {
-                        if (!query) return true;
-                        if (searchType === 'all') {
-                            return char.character.toLowerCase().includes(query) ||
-                                char.pinyin.toLowerCase().includes(query) ||
-                                char.translation.toLowerCase().includes(query);
-                        } else if (searchType === 'character') {
-                            return char.character.toLowerCase().includes(query);
-                        } else if (searchType === 'pinyin') {
-                            return char.pinyin.toLowerCase().includes(query);
-                        } else if (searchType === 'translation') {
-                            return char.translation.toLowerCase().includes(query);
-                        }
-                        return true;
-                    });
-                }
-
-                renderCharacters();
             } catch (error) {
-                console.error('Ошибка при поиске:', error);
-                document.getElementById('charactersGrid').innerHTML =
-                    '<div class="no-results">Ошибка при поиске. Пожалуйста, попробуйте позже.</div>';
+                log('Ошибка поиска:', error);
+                showError('Ошибка соединения');
             }
         }
-
+        
+        // Локальный поиск (запасной вариант)
+        function localSearch(char, query, searchType) {
+            if (!query) return true;
+            
+            const fields = {
+                'all': ['character', 'pinyin', 'translation'],
+                'character': ['character'],
+                'pinyin': ['pinyin'],
+                'translation': ['translation']
+            }[searchType] || ['character', 'pinyin', 'translation'];
+            
+            return fields.some(field => 
+                String(char[field]).toLowerCase().includes(query)
+            );
+        }
+        
+        // Запасные данные
+        function getFallbackCharacters() {
+            return [
+                {id: 1, character: '人', pinyin: 'rén', translation: 'человек', category: 'базовый'},
+                {id: 2, character: '口', pinyin: 'kǒu', translation: 'рот', category: 'базовый'},
+                {id: 3, character: '日', pinyin: 'rì', translation: 'солнце, день', category: 'базовый'},
+                {id: 4, character: '月', pinyin: 'yuè', translation: 'луна, месяц', category: 'базовый'},
+                {id: 5, character: '山', pinyin: 'shān', translation: 'гора', category: 'природа'},
+                {id: 6, character: '水', pinyin: 'shuǐ', translation: 'вода', category: 'природа'},
+                {id: 7, character: '火', pinyin: 'huǒ', translation: 'огонь', category: 'природа'},
+                {id: 8, character: '木', pinyin: 'mù', translation: 'дерево', category: 'природа'},
+                {id: 9, character: '爱', pinyin: 'ài', translation: 'любовь', category: 'абстрактные'},
+                {id: 10, character: '好', pinyin: 'hǎo', translation: 'хороший', category: 'абстрактные'}
+            ];
+        }
+        
+        // Отображение загрузки
+        function showLoading(message) {
+            document.getElementById('charactersGrid').innerHTML = `
+                <div class="loading">${message}</div>
+            `;
+        }
+        
+        // Отображение ошибки
+        function showError(message) {
+            document.getElementById('charactersGrid').innerHTML = `
+                <div class="no-results">${message}</div>
+            `;
+        }
+        
         // Отрисовка иероглифов
         function renderCharacters() {
             const grid = document.getElementById('charactersGrid');
-
-            if (filteredCharacters.length === 0) {
-                grid.innerHTML = '<div class="no-results">Ничего не найдено. Попробуйте изменить запрос.</div>';
+            
+            if (!filteredCharacters.length) {
+                showError('Ничего не найдено');
                 return;
             }
-
+            
             grid.innerHTML = filteredCharacters.map(char => `
                 <div class="character-card">
                     <div class="character">${char.character}</div>
@@ -317,34 +339,29 @@
                 </div>
             `).join('');
         }
-
+        
         // Инициализация приложения
         async function initApp() {
+            // Проверяем, что мы внутри Telegram WebApp
+            if (!window.Telegram || !window.Telegram.WebApp) {
+                showError('Приложение должно быть запущено в Telegram');
+                return;
+            }
+            
+            // Загружаем данные
             allCharacters = await fetchCharacters();
             filteredCharacters = [...allCharacters];
             renderCharacters();
-
-            // Настройка поиска
+            
+            // Настраиваем обработчики
             document.getElementById('searchInput').addEventListener('input', handleSearch);
             document.getElementById('searchType').addEventListener('change', handleSearch);
-
-            // Обработчик для получения данных от бота
-            Telegram.WebApp.onEvent('web_app_data_received', function (eventData) {
-                try {
-                    const data = JSON.parse(eventData);
-                    if (data.action === 'characters_response') {
-                        filteredCharacters = data.characters || [];
-                        renderCharacters();
-                    }
-                } catch (e) {
-                    console.error('Ошибка обработки данных от бота:', e);
-                }
-            });
+            
+            log('Приложение инициализировано');
         }
-
-        // Запуск приложения
+        
+        // Запускаем приложение
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-
 </html>
