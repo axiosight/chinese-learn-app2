@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -77,6 +76,10 @@
             font-size: 12px;
             margin-top: 10px;
         }
+        .error {
+            color: red;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -94,23 +97,34 @@
             <button onclick="loadCharacters()">Показать</button>
         </div>
         
+        <div id="errorMessage" class="error"></div>
         <div class="cards" id="cardsContainer"></div>
     </div>
 
     <script>
         async function loadCharacters() {
             const category = document.getElementById("categoryFilter").value;
-            let url = "/api/characters";
-            if (category) {
-                url += `?category=${encodeURIComponent(category)}`;
-            }
+            const errorElement = document.getElementById("errorMessage");
+            errorElement.textContent = "";
             
             try {
+                // Используем относительный путь к API
+                let url = "/api/characters";
+                if (category) {
+                    url += `?category=${encodeURIComponent(category)}`;
+                }
+                
                 const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const characters = await response.json();
                 displayCharacters(characters);
             } catch (error) {
                 console.error("Ошибка при загрузке иероглифов:", error);
+                errorElement.textContent = "Ошибка при загрузке данных. Пожалуйста, попробуйте позже.";
             }
         }
         
