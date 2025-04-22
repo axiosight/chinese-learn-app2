@@ -1,39 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Web Speech API Example</title>
+    <title>Google TTS Chinese Example</title>
 </head>
-
 <body>
-    <h1>Пример озвучки китайских иероглифов с использованием Web Speech API</h1>
-
-    <!-- Кнопка для запуска синтеза речи -->
-    <button onclick="speakChinese()">ОЗВУЧИТЬ ИЕРОГЛИФЫ</button>
-
-    <script type="text/javascript"> function speakChinese() {
-            // Создаем объект синтезатора речи 
-            const synth = window.speechSynthesis;
-            // Проверяем доступность синтезатора 
-            if (!synth) return alert("Ваш браузер не поддерживает Web Speech API");
-            // Создаем объекты произносимых фрагментов текста 
-            let utterance1 = new SpeechSynthesisUtterance('我');
-            let utterance2 = new SpeechSynthesisUtterance('爱');
-            let utterance3 = new SpeechSynthesisUtterance('你');
-            // Настраиваем голос для китайского языка 
-            utterance1.lang = 'zh-CN';
-            utterance2.lang = 'zh-CN';
-            utterance3.lang = 'zh-CN';
-            // Добавляем обработчик события окончания произнесения каждого символа 
-            utterance1.onend = () => { console.log('Первый иероглиф произнесён'); };
-            utterance2.onend = () => { console.log('Второй иероглиф произнесён'); };
-            utterance3.onend = () => { console.log('Третий иероглиф произнесён'); };
-            // Запускаем синтезатор речи последовательно 
-            synth.speak(utterance1);
-            synth.speak(utterance2);
-            synth.speak(utterance3);
-        } </script>
+    <h1>Chinese Text to Speech with Google TTS</h1>
+    <textarea id="input-text"></textarea><br/>
+    <button onclick="playAudio()">Обыграть</button>
+    
+    <!-- Скрипт speech synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/speak.js/1.6.1/Speak.min.js"></script>
+    <script> function playAudio() { const text = document.getElementById('input-text').value; // Настройки синтеза текста на китайском языке const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; // Китайский язык (Китай) // Воспроизведение звука window.speechSynthesis.speak(utterance); } </script>
 </body>
-
 </html>
