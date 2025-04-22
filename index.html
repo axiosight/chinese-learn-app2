@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Google TTS Chinese Example</title>
 </head>
+
 <body>
-    <h1>Chinese Text to Speech with Google TTS</h1>
-    <textarea id="input-text"></textarea><br/>
+    <h1>Chinese Text to Speech with Web Speech API</h1>
+    <textarea id="input-text"></textarea><br />
     <button onclick="playAudio()">Обыграть</button>
-    
-    <!-- Скрипт speech synthesis -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/speak.js/1.6.1/Speak.min.js"></script>
-    <script> function playAudio() { const text = document.getElementById('input-text').value; // Настройки синтеза текста на китайском языке 
-    const utterance = new SpeechSynthesisUtterance(text); 
-    utterance.lang = 'zh-CN'; // Китайский язык (Китай) // Воспроизведение звука 
-    window.speechSynthesis.speak(utterance); } 
+
+    <script> function playAudio() {
+            const text = document.getElementById('input-text').value;
+            if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
+                // Создаем объект для произнесения текста 
+                const msg = new SpeechSynthesisUtterance(); // Устанавливаем текст и язык (mandarin chinese) 
+                msg.text = text; msg.lang = 'zh-CN'; // Произносим текст 
+                window.speechSynthesis.speak(msg);
+            }
+            else {
+                alert("Ваш браузер не поддерживает Web Speech API.");
+
+            }
+        } 
     </script>
 </body>
+
 </html>
