@@ -1,134 +1,25 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Китайская озвучка через Google TTS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        #text-input {
-            width: 100%;
-            height: 100px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            padding: 10px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #4285F4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #3367D6;
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        .controls {
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <h1>Озвучка китайского текста через Google TTS</h1>
+<button onclick="speakChinese()">Произнести</button>
+<script>
+  function speakChinese() {
+    const text = "你好，这是一个测试。";
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN'; // Указываем китайский язык
     
-    <textarea id="text-input" placeholder="请输入中文文本...">你好，世界！这是一个中文语音合成的例子。</textarea>
+    // Попробуем найти китайский голос
+    const voices = window.speechSynthesis.getVoices();
+    const chineseVoice = voices.find(voice => voice.lang.includes('zh'));
     
-    <div class="controls">
-        <button id="speak-btn">Произнести</button>
-        <button id="stop-btn" disabled>Остановить</button>
-    </div>
+    if (chineseVoice) {
+      utterance.voice = chineseVoice;
+    } else {
+      console.warn("Китайские голоса не найдены, будет использован стандартный");
+    }
     
-    <div class="controls">
-        <label for="language">Диалект:</label>
-        <select id="language">
-            <option value="zh-CN">普通话 (Китай)</option>
-            <option value="zh-TW">國語 (Тайвань)</option>
-            <option value="zh-HK">廣東話 (Гонконг)</option>
-        </select>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const textInput = document.getElementById('text-input');
-            const speakBtn = document.getElementById('speak-btn');
-            const stopBtn = document.getElementById('stop-btn');
-            const languageSelect = document.getElementById('language');
-            
-            let audio = null;
-            
-            // Функция для озвучки текста
-            function speakChinese(text, lang) {
-                if (!text.trim()) {
-                    alert('Пожалуйста, введите текст для озвучки');
-                    return;
-                }
-                
-                // Останавливаем предыдущее воспроизведение
-                if (audio) {
-                    audio.pause();
-                }
-                
-                // Создаем новый аудиоэлемент
-                audio = new Audio();
-                
-                // Формируем URL для Google TTS API
-                const encodedText = encodeURIComponent(text);
-                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodedText}`;
-                
-                audio.src = ttsUrl;
-                
-                // Обработчики событий
-                audio.onplay = () => {
-                    speakBtn.disabled = true;
-                    stopBtn.disabled = false;
-                };
-                
-                audio.onended = () => {
-                    speakBtn.disabled = false;
-                    stopBtn.disabled = true;
-                };
-                
-                audio.onerror = () => {
-                    console.error('Ошибка воспроизведения');
-                    speakBtn.disabled = false;
-                    stopBtn.disabled = true;
-                };
-                
-                // Начинаем воспроизведение
-                audio.play().catch(e => {
-                    console.error('Ошибка:', e);
-                    alert('Не удалось воспроизвести звук. Попробуйте ещё раз.');
-                });
-            }
-            
-            // Обработчик кнопки "Произнести"
-            speakBtn.addEventListener('click', () => {
-                const text = textInput.value;
-                const lang = languageSelect.value;
-                speakChinese(text, lang);
-            });
-            
-            // Обработчик кнопки "Остановить"
-            stopBtn.addEventListener('click', () => {
-                if (audio) {
-                    audio.pause();
-                    speakBtn.disabled = false;
-                    stopBtn.disabled = true;
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+    window.speechSynthesis.speak(utterance);
+  }
+  
+  // Загружаем голоса при загрузке страницы
+  window.speechSynthesis.onvoiceschanged = function() {
+    console.log("Доступные голоса:", window.speechSynthesis.getVoices());
+  };
+</script>
