@@ -1,44 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Chinese TTS</title>
+    <title>Китайская озвучка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #text-input {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>Chinese Text to Speech (Mobile Compatible)</h1>
-    <textarea id="input-text">他今年五十岁了</textarea><br />
-    <button onclick="playAudio()">Play Audio</button>
-
-    <p id="output-status"></p>
+    <h1>Озвучка китайского текста</h1>
+    
+    <textarea id="text-input" placeholder="请输入中文文本...">你好，这是一个中文语音合成的例子。</textarea>
+    
+    <div>
+        <button id="speak-btn">Произнести</button>
+        <button id="stop-btn" disabled>Остановить</button>
+    </div>
+    
+    <div>
+        <label for="voice-select">Выберите голос:</label>
+        <select id="voice-select"></select>
+    </div>
+    
+    <div>
+        <label for="rate">Скорость:</label>
+        <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+        <span id="rate-value">1</span>
+    </div>
+    
+    <div>
+        <label for="pitch">Тональность:</label>
+        <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
+        <span id="pitch-value">1</span>
+    </div>
 
     <script>
-        // Глобальная переменная для хранения списка голосов 
-        let availableVoices = [];
-        // Регистрация события изменения списка голосов 
-        speechSynthesis.onvoiceschanged = () => { availableVoices = speechSynthesis.getVoices(); };
-        async function playAudio() {
-            const text = document.getElementById('input-text').value.trim();
-            try {
-                if (!('speechSynthesis' in window)) throw new Error("Web Speech API is not supported by your device");
-                // Ожидаем загрузки списка голосов 
-                while (availableVoices.length === 0) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
+        document.addEventListener('DOMContentLoaded', () => {
+            const textInput = document.getElementById('text-input');
+            const speakBtn = document.getElementById('speak-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const voiceSelect = document.getElementById('voice-select');
+            const rate = document.getElementById('rate');
+            const rateValue = document.getElementById('rate-value');
+            const pitch = document.getElementById('pitch');
+            const pitchValue = document.getElementById('pitch-value');
+            
+            let speechSynthesis = window.speechSynthesis;
+            let voices = [];
+            
+            // Обновление доступных голосов
+            function loadVoices() {
+                voices = speechSynthesis.getVoices();
+                voiceSelect.innerHTML = '';
+                
+                // Фильтрация китайских голосов
+                const chineseVoices = voices.filter(voice => 
+                    voice.lang.includes('zh') || voice.lang.includes('cmn'));
+                
+                if (chineseVoices.length > 0) {
+                    chineseVoices.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        option.setAttribute('data-voice', voice.name);
+                        voiceSelect.appendChild(option);
+                    });
+                } else {
+                    // Если китайских голосов нет, показываем все доступные
+                    voices.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        option.setAttribute('data-voice', voice.name);
+                        voiceSelect.appendChild(option);
+                    });
+                    
+                    alert('Китайские голоса не найдены. Попробуйте другой голос.');
                 }
-                const msg = new SpeechSynthesisUtterance();
-                msg.text = text; msg.lang = 'zh-CN'; // Мандарин Китай 
-                // Выбор подходящего голоса 
-                let matchingVoice = availableVoices.find(voice => voice.lang.startsWith('zh'));
-                if (!matchingVoice) throw new Error("No suitable Chinese voice found");
-                msg.voice = matchingVoice; speechSynthesis.speak(msg);
-                document.getElementById('output-status').innerText = 'Playing audio...';
-            } catch (err) {
-                console.error(err.message || err);
-                document.getElementById('output-status').innerText = `Error: ${err.message}`;
             }
-        } </script>
+            
+            // Инициализация при загрузке
+            speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices(); // На случай, если голоса уже загружены
+            
+            // Обновление значений скорости и тона
+            rate.addEventListener('input', () => {
+                rateValue.textContent = rate.value;
+            });
+            
+            pitch.addEventListener('input', () => {
+                pitchValue.textContent = pitch.value;
+            });
+            
+            // Произнесение текста
+            speakBtn.addEventListener('click', () => {
+                if (textInput.value.trim() === '') {
+                    alert('Пожалуйста, введите текст для озвучки');
+                    return;
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(textInput.value);
+                
+                // Настройки произношения
+                utterance.rate = parseFloat(rate.value);
+                utterance.pitch = parseFloat(pitch.value);
+                
+                // Выбор голоса
+                const selectedVoiceName = voiceSelect.selectedOptions[0].getAttribute('data-voice');
+                const selectedVoice = voices.find(voice => voice.name === selectedVoiceName);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice.lang;
+                }
+                
+                // События
+                utterance.onstart = () => {
+                    speakBtn.disabled = true;
+                    stopBtn.disabled = false;
+                };
+                
+                utterance.onend = () => {
+                    speakBtn.disabled = false;
+                    stopBtn.disabled = true;
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error('Ошибка синтеза речи:', event);
+                    speakBtn.disabled = false;
+                    stopBtn.disabled = true;
+                };
+                
+                speechSynthesis.speak(utterance);
+            });
+            
+            // Остановка произношения
+            stopBtn.addEventListener('click', () => {
+                speechSynthesis.cancel();
+                speakBtn.disabled = false;
+                stopBtn.disabled = true;
+            });
+        });
+    </script>
 </body>
-
 </html>
