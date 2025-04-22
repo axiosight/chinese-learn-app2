@@ -8,23 +8,37 @@
 
 <body>
     <h1>Chinese Text to Speech with Web Speech API</h1>
-    <textarea id="input-text"></textarea><br />
+    <textarea id="input-text">他今年五十岁了</textarea><br />
     <button onclick="playAudio()">Обыграть</button>
 
-    <script> function playAudio() {
-            const text = document.getElementById('input-text').value;
-            if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
-                // Создаем объект для произнесения текста 
-                const msg = new SpeechSynthesisUtterance(); // Устанавливаем текст и язык (mandarin chinese) 
-                msg.text = text; msg.lang = 'zh-CN'; // Произносим текст 
-                window.speechSynthesis.speak(msg);
-            }
-            else {
-                alert("Ваш браузер не поддерживает Web Speech API.");
+    <p id="output-status"></p>
 
-            }
-        } 
-    </script>
+    <script> async function playAudio() {
+            const text = document.getElementById('input-text').value.trim(); // Обрезаем лишние пробелы 
+            try {
+                if (!('speechSynthesis' in window)) throw new Error("Web Speech API is not supported by your browser");
+                const voices = await speechSynthesis.getVoices(); // Ждём загрузки доступных голосов 
+                if (voices.length === 0) throw new Error("No voices available for speech synthesis");
+                const msg = new SpeechSynthesisUtterance(); msg.text = text; msg.lang = 'zh-CN'; // Мандарин Китай 
+                msg.rate = 1; // Скорость воспроизведения (стандартная скорость) 
+                msg.pitch = 1; // Высота тона (средняя высота) 
+                let matchingVoice = null; for (let voice of voices) {
+                    if (voice.lang.includes('zh')) {
+                        // Ищем подходящий китайский голос 
+                        matchingVoice = voice; break;
+                    }
+                }
+                if (matchingVoice) {
+                    msg.voice = matchingVoice; // Используем найденный голос
+                    speechSynthesis.speak(msg); // Начинаем произносить текст 
+                    console.log(`Using voice: ${matchingVoice.name}`);
+                }
+                else {
+                    throw new Error("No suitable Chinese voice found on this system");
+                }
+                document.getElementById('output-status').innerText = 'Звук воспроизводится...';
+            } catch (err) { console.error(err.message || err); document.getElementById('output-status').innerText = `Ошибка: ${err.message}`; }
+        } </script>
 </body>
 
 </html>
