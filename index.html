@@ -11,6 +11,10 @@
     
     <!-- Скрипт speech synthesis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/speak.js/1.6.1/Speak.min.js"></script>
-    <script> function playAudio() { const text = document.getElementById('input-text').value; // Настройки синтеза текста на китайском языке const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; // Китайский язык (Китай) // Воспроизведение звука window.speechSynthesis.speak(utterance); } </script>
+    <script> function playAudio() { const text = document.getElementById('input-text').value; // Настройки синтеза текста на китайском языке 
+    const utterance = new SpeechSynthesisUtterance(text); 
+    utterance.lang = 'zh-CN'; // Китайский язык (Китай) // Воспроизведение звука 
+    window.speechSynthesis.speak(utterance); } 
+    </script>
 </body>
 </html>
