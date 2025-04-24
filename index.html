@@ -355,6 +355,193 @@
             min-width: 200px;
         }
 
+        /* Стили для теста */
+        .test-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-start {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .test-start-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .test-start-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .test-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .test-character {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 8rem;
+            margin: 30px 0;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .test-btn-remember {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .test-btn-remember:hover {
+            background-color: #27ae60;
+        }
+
+        .test-btn-forget {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .test-btn-forget:hover {
+            background-color: #c0392b;
+        }
+
+        .test-timer {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .test-results {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .test-results-stats {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .test-results-list {
+            width: 100%;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .test-result-item {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-result-symbol {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .test-result-info {
+            flex: 1;
+        }
+
+        .test-result-pinyin {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .test-result-translation {
+            font-size: 1rem;
+            color: var(--dark-color);
+        }
+
+        .test-result-status {
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        .test-result-remembered {
+            color: var(--success-color);
+        }
+
+        .test-result-forgotten {
+            color: var(--primary-color);
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .test-action-btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .test-action-restart {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .test-action-restart:hover {
+            background-color: #2980b9;
+        }
+
+        .test-action-new {
+            background-color: var(--module-3-color);
+            color: white;
+        }
+
+        .test-action-new:hover {
+            background-color: #27ae60;
+        }
+
+        .test-action-finish {
+            background-color: var(--dark-color);
+            color: white;
+        }
+
+        .test-action-finish:hover {
+            background-color: #1a252f;
+        }
+
         @media (max-width: 768px) {
             .character-symbol {
                 font-size: 3rem;
@@ -380,6 +567,15 @@
             .dialogues-filter {
                 min-width: 100%;
             }
+
+            .test-character {
+                font-size: 5rem;
+            }
+
+            .test-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -394,6 +590,10 @@
             .tabs {
                 flex-direction: column;
             }
+
+            .test-character {
+                font-size: 4rem;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -403,12 +603,13 @@
     <div class="container">
         <header>
             <h1>Китайские иероглифы</h1>
-            <p class="subtitle">Словарь и диалоги</p>
+            <p class="subtitle">Словарь, диалоги и тесты</p>
         </header>
 
         <div class="tabs">
             <div class="tab active" data-tab="characters">Иероглифы</div>
             <div class="tab" data-tab="dialogues">Диалоги</div>
+            <div class="tab" data-tab="test">Тест</div>
         </div>
 
         <div class="content-section active" id="characters-section">
@@ -451,7 +652,7 @@
             <div class="dialogues-controls">
                 <div class="dialogues-search">
                     <label for="dialogues-search">Поиск диалогов:</label>
-                    <input type="text" id="dialogues-search" placeholder="Название диалога...">
+                    <input type="text" id="dialogues-search" placeholder="Название, иероглифы, пиньинь или перевод...">
                 </div>
                 <div class="dialogues-filter">
                     <label for="dialogues-module">Фильтр по модулям:</label>
@@ -470,6 +671,40 @@
             </div>
         </div>
 
+        <div class="content-section" id="test-section">
+            <div class="test-container">
+                <div class="test-start" id="test-start">
+                    <h2>Тест на знание иероглифов</h2>
+                    <p>Вам будет показано 10 случайных иероглифов. По каждому иероглифу нужно решить, помните ли вы его
+                        значение.</p>
+                    <p>У вас будет 5 минут на прохождение теста.</p>
+                    <button class="test-start-btn" id="start-test-btn">Начать тест</button>
+                </div>
+
+                <div class="test-card" id="test-card">
+                    <div class="test-timer" id="test-timer">Осталось времени: 5:00</div>
+                    <div class="test-character" id="test-character"></div>
+                    <div class="test-buttons">
+                        <button class="test-btn test-btn-remember" id="remember-btn">Помню</button>
+                        <button class="test-btn test-btn-forget" id="forget-btn">Не помню</button>
+                    </div>
+                    <div class="test-progress" id="test-progress">Вопрос 1 из 10</div>
+                </div>
+
+                <div class="test-results" id="test-results">
+                    <h2>Результаты теста</h2>
+                    <div class="test-results-stats" id="test-stats"></div>
+                    <div class="test-results-list" id="test-results-list"></div>
+                    <div class="test-actions">
+                        <button class="test-action-btn test-action-restart" id="restart-test-btn">Повторить
+                            тест</button>
+                        <button class="test-action-btn test-action-new" id="new-test-btn">Новый тест</button>
+                        <button class="test-action-btn test-action-finish" id="finish-test-btn">Закончить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer>
             <p>Словарь китайских иероглифов HK1&copy; 2025</p>
         </footer>
@@ -478,1149 +713,1111 @@
     <script>
         // База данных иероглифов
         const characters = [
-        {
-            symbol: '爱', pinyin: 'ài', translation: 'любить; любовь; любимый', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=爱'
-        }
-        ,
-        {
-            symbol: '八', pinyin: 'bā', translation: 'восемь; восьмой', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=八'
-        }
-        ,
-        {
-            symbol: '爸爸', pinyin: 'bàba', translation: 'папа, тятя', category: 'семья', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=爸爸'
-        }
-        ,
-        {
-            symbol: '杯子', pinyin: 'bēizi', translation: 'стакан; кружка; бокал; рюмка', category: 'вещи', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=杯子'
-        }
-        ,
-        {
-            symbol: '北京', pinyin: 'běijīng', translation: 'Пекин', category: 'страны', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=北京'
-        }
-        ,
-        {
-            symbol: '本', pinyin: 'běn', translation: 'счётное слово для растений,цветов', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=本'
-        }
-        ,
-        {
-            symbol: '不客气', pinyin: 'bùkěqi', translation: 'не церемоньтесь!; не стесняйтесь!', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=不客气'
-        }
-        ,
-        {
-            symbol: '不', pinyin: 'bù', translation: 'отрицательная частица не', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=不'
-        }
-        ,
-        {
-            symbol: '菜', pinyin: 'cài', translation: 'овощи; блюдо; пища; стол', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=菜'
-        }
-        ,
-        {
-            symbol: '茶', pinyin: 'chá', translation: 'чай', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=茶'
-        }
-        ,
-        {
-            symbol: '吃', pinyin: 'chī', translation: 'есть, кушать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=吃'
-        }
-        ,
-        {
-            symbol: '出租车', pinyin: 'chūzūchē', translation: 'такси', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=出租车'
-        }
-        ,
-        {
-            symbol: '打电话', pinyin: 'dǎ diànhuà', translation: 'звонить по телефону', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=打电话'
-        }
-        ,
-        {
-            symbol: '大', pinyin: 'dà', translation: 'большой; крупный; великий; огромный', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=大'
-        }
-        ,
-        {
-            symbol: '的', pinyin: 'de', translation: 'суффикс прилагательного; суффикс притяжательности', category: 'частица',
-            audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=的'
-        }
-        ,
-        {
-            symbol: '点', pinyin: 'diǎn', translation: 'капля; немножко, чуточку; точка; запятая', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=点'
-        }
-        ,
-        {
-            symbol: '电脑', pinyin: 'diànnǎo', translation: 'компьютер', category: 'техника', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=电脑'
-        }
-        ,
-        {
-            symbol: '电视', pinyin: 'diànshì', translation: 'телевидение; телевизионный', category: 'техника', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=电视'
-        }
-        ,
-        {
-            symbol: '电影', pinyin: 'diànyǐng', translation: 'кино', category: 'досуг', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=电影'
-        }
-        ,
-        {
-            symbol: '东西', pinyin: 'dōngxi', translation: 'вещь; предмет', category: 'вещь', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=东西'
-        }
-        ,
-        {
-            symbol: '都', pinyin: 'dōu', translation: 'все; всё', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=都'
-        }
-        ,
-        {
-            symbol: '读', pinyin: 'dú', translation: 'читать; зачитывать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=读'
-        }
-        ,
-        {
-            symbol: '对不起', pinyin: 'duìbuqǐ', translation: 'виноват!, простите!, извините!', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=对不起'
-        }
-        ,
-        {
-            symbol: '多', pinyin: 'duō', translation: 'много; многочисленный; свыше', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=多'
-        }
-        ,
-        {
-            symbol: '多少', pinyin: 'duōshao', translation: 'сколько?', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=多少'
-        }
-        ,
-        {
-            symbol: '儿子', pinyin: 'érzi', translation: 'сын', category: 'семья', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=儿子'
-        }
-        ,
-        {
-            symbol: '二', pinyin: 'èr', translation: 'два; второй', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=二'
-        }
-        ,
-        {
-            symbol: '饭馆', pinyin: 'fànguǎn', translation: 'ресторан; столовая', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=饭馆'
-        }
-        ,
-        {
-            symbol: '飞机', pinyin: 'fēijī', translation: 'самолёт', category: 'техника', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=飞机'
-        }
-        ,
-        {
-            symbol: '分钟', pinyin: 'fēnzhōng', translation: 'минута', category: 'время', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=分钟'
-        }
-        ,
-        {
-            symbol: '高兴', pinyin: 'gāoxìng', translation: 'радоваться; радостный', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=高兴'
-        }
-        ,
-        {
-            symbol: '个', pinyin: 'gè', translation: 'универсальное сч. сл.;отдельный; индивидуальный', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=个'
-        }
-        ,
-        {
-            symbol: '工作', pinyin: 'gōngzuò', translation: 'работать; работа', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=工作'
-        }
-        ,
-        {
-            symbol: '狗', pinyin: 'gǒu', translation: 'собака; собачий', category: 'животные', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=狗'
-        }
-        ,
-        {
-            symbol: '汉语', pinyin: 'hànyǔ', translation: 'китайский язык', category: 'языки', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=汉语'
-        }
-        ,
-        {
-            symbol: '好', pinyin: 'hǎo', translation: 'хороший; хорошо; приятный; удобный', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=好'
-        }
-        ,
-        {
-            symbol: '喝', pinyin: 'hē', translation: 'пить', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=喝'
-        }
-        ,
-        {
-            symbol: '和', pinyin: 'hé', translation: 'мирный; союз и; предлог с', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=和'
-        }
-        ,
-        {
-            symbol: '很', pinyin: 'hěn', translation: 'очень; весьма', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=很'
-        }
-        ,
-        {
-            symbol: '后面', pinyin: 'hòumiàn', translation: 'задняя сторона; зад; позади,сзади; задний', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=后面'
-        }
-        ,
-        {
-            symbol: '回', pinyin: 'huí', translation: 'возвращаться', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=回'
-        }
-        ,
-        {
-            symbol: '会', pinyin: 'huì', translation: 'уметь; мочь; владеть; собрание; заседание', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=会'
-        }
-        ,
-        {
-            symbol: '火车站', pinyin: 'huǒchēzhàn', translation: 'вокзал; железнодорожная станция', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=火车站'
-        }
-        ,
-        {
-            symbol: '几', pinyin: 'jǐ', translation: 'сколько?; несколько; немного', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=几'
-        }
-        ,
-        {
-            symbol: '家', pinyin: 'jiā', translation: 'семья; семейство; дом; домашний', category: 'семья', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=家'
-        }
-        ,
-        {
-            symbol: '叫', pinyin: 'jiào', translation: 'кричать; крик; звать; подзывать; вызывать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=叫'
-        }
-        ,
-        {
-            symbol: '今天', pinyin: 'jīntiān', translation: 'сегодня; нынешний день', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=今天'
-        }
-        ,
-        {
-            symbol: '九', pinyin: 'jiǔ', translation: 'девять; девятый', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=九'
-        }
-        ,
-        {
-            symbol: '开', pinyin: 'kāi', translation: 'открывать; управлять; вести; включать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=开'
-        }
-        ,
-        {
-            symbol: '看', pinyin: 'kàn', translation: 'смотреть; читать (про себя); навестить', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=看'
-        }
-        ,
-        {
-            symbol: '看见', pinyin: 'kànjiàn', translation: 'увидеть; видеть', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=看见'
-        }
-        ,
-        {
-            symbol: '块', pinyin: 'kuài', translation: 'сч. сл. для основных денежных единиц; кусок; глыба', category: 'частица',
-            audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=块'
-        }
-        ,
-        {
-            symbol: '来', pinyin: 'lái', translation: 'приходить; прибывать; приезжать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=来'
-        }
-        ,
-        {
-            symbol: '老师', pinyin: 'lǎoshī', translation: 'учитель; преподаватель', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=老师'
-        }
-        ,
-        {
-            symbol: '了', pinyin: 'le', translation: 'глагольный суффикс завершенности действия', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=了'
-        }
-        ,
-        {
-            symbol: '冷', pinyin: 'lěng', translation: 'холодный; холодно; холод', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=冷'
-        }
-        ,
-        {
-            symbol: '里', pinyin: 'lǐ', translation: 'внутри; в', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=里'
-        }
-        ,
-        {
-            symbol: '零', pinyin: 'líng', translation: 'ноль; нолевой', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=零'
-        }
-        ,
-        {
-            symbol: '六', pinyin: 'liù', translation: 'шесть; шестой', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=六'
-        }
-        ,
-        {
-            symbol: '妈妈', pinyin: 'māma', translation: 'мама', category: 'семья', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=妈妈'
-        }
-        ,
-        {
-            symbol: '吗', pinyin: 'ma', translation: 'фразовая частица, выражающая вопрос', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=吗'
-        }
-        ,
-        {
-            symbol: '买', pinyin: 'mǎi', translation: 'покупать, приобретать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=买'
-        }
-        ,
-        {
-            symbol: '猫', pinyin: 'māo', translation: 'кошка', category: 'животные', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=猫'
-        }
-        ,
-        {
-            symbol: '没', pinyin: 'méi', translation: 'отрицательная частица', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=没'
-        }
-        ,
-        {
-            symbol: '没关系', pinyin: 'méi guānxi', translation: 'неважно; ничего; пустяки', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=没关系'
-        }
-        ,
-        {
-            symbol: '米饭', pinyin: 'mǐfàn', translation: 'варёный рис', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=米饭'
-        }
-        ,
-        {
-            symbol: '明天', pinyin: 'míngtiān', translation: 'завтра; завтрашний день', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=明天'
-        }
-        ,
-        {
-            symbol: '名字', pinyin: 'míngzi', translation: 'имя (человека); кличка(животного)', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=名字'
-        }
-        ,
-        {
-            symbol: '哪', pinyin: 'nǎ', translation: 'какой; который', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=哪'
-        }
-        ,
-        {
-            symbol: '那', pinyin: 'nà', translation: 'тот; то; тогда, в таком случае', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=那'
-        }
-        ,
-        {
-            symbol: '呢', pinyin: 'ne', translation: 'фразовая частица, выражающая вопрос же?', category: 'частица', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=呢'
-        }
-        ,
-        {
-            symbol: '能', pinyin: 'néng', translation: 'способный; способность', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=能'
-        }
-        ,
-        {
-            symbol: '你', pinyin: 'nǐ', translation: 'ты; вы; твой; ваш', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=你'
-        }
-        ,
-        {
-            symbol: '年', pinyin: 'nián', translation: 'год; годы', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=年'
-        }
-        ,
-        {
-            symbol: '女儿', pinyin: 'nǚ’er', translation: 'дочь', category: 'семья', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=女儿'
-        }
-        ,
-        {
-            symbol: '朋友', pinyin: 'péngyou', translation: 'друг, товарищ; друзья', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=朋友'
-        }
-        ,
-        {
-            symbol: '漂亮', pinyin: 'piàoliang', translation: 'красивый', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=漂亮'
-        }
-        ,
-        {
-            symbol: '苹果', pinyin: 'píngguǒ', translation: 'яблоко', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=苹果'
-        }
-        ,
-        {
-            symbol: '七', pinyin: 'qī', translation: 'семь; седьмой', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=七'
-        }
-        ,
-        {
-            symbol: '钱', pinyin: 'qián', translation: 'деньги', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=钱'
-        }
-        ,
-        {
-            symbol: '前面', pinyin: 'qiánmian', translation: 'перед; передний; впереди; перёд; выше; ранее', category: 'базовые',
-            audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=前面'
-        }
-        ,
-        {
-            symbol: '请', pinyin: 'qǐng', translation: 'просить; пожалуйста!; приглашать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=请'
-        }
-        ,
-        {
-            symbol: '去', pinyin: 'qù', translation: 'уходить; отправляться; идти', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=去'
-        }
-        ,
-        {
-            symbol: '热', pinyin: 'rè', translation: 'горячий; увлечение; мода', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=热'
-        }
-        ,
-        {
-            symbol: '人', pinyin: 'rén', translation: 'человек; люди', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=人'
-        }
-        ,
-        {
-            symbol: '认识', pinyin: 'rènshi', translation: 'знать; быть знакомым;знакомиться', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=认识'
-        }
-        ,
-        {
-            symbol: '日', pinyin: 'rì', translation: 'солнце; солнечный; день; число, дата', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=日'
-        }
-        ,
-        {
-            symbol: '三', pinyin: 'sān', translation: 'три; третий', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=三'
-        }
-        ,
-        {
-            symbol: '商店', pinyin: 'shāngdiàn', translation: 'магазин', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=商店'
-        }
-        ,
-        {
-            symbol: '上', pinyin: 'shàng', translation: 'верх; прошлый; на; в', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=上'
-        }
-        ,
-        {
-            symbol: '上午', pinyin: 'shàngwǔ', translation: 'до полудня', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=上午'
-        }
-        ,
-        {
-            symbol: '少', pinyin: 'shǎo', translation: 'мало; немного; редко', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=少'
-        }
-        ,
-        {
-            symbol: '谁', pinyin: 'shuí, shéi', translation: 'кто; кого; чей', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=谁'
-        }
-        ,
-        {
-            symbol: '什么', pinyin: 'shénme', translation: 'что?, что такое?; какой?; как?', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=什么'
-        }
-        ,
-        {
-            symbol: '十', pinyin: 'shí', translation: 'десять; десятый', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=十'
-        }
-        ,
-        {
-            symbol: '时候', pinyin: 'shíhou', translation: 'время, промежуток; времени; вовремя', category: 'время', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=时候'
-        }
-        ,
-        {
-            symbol: '是', pinyin: 'shì', translation: 'есть; быть; являться; да; правда', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=是'
-        }
-        ,
-        {
-            symbol: '书', pinyin: 'shū', translation: 'книга', category: 'предмет', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=书'
-        }
-        ,
-        {
-            symbol: '水', pinyin: 'shuǐ', translation: 'вода; водяной; гидро-', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=水'
-        }
-        ,
-        {
-            symbol: '水果', pinyin: 'shuǐguǒ', translation: 'фрукты; фруктовый', category: 'еда', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=水果'
-        }
-        ,
-        {
-            symbol: '睡觉', pinyin: 'shuìjiào', translation: 'спать', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=睡觉'
-        }
-        ,
-        {
-            symbol: '说话', pinyin: 'shuōhuà', translation: 'говорить; разговаривать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=说话'
-        }
-        ,
-        {
-            symbol: '四', pinyin: 'sì', translation: 'четыре; четвёртый', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=四'
-        }
-        ,
-        {
-            symbol: '岁', pinyin: 'suì', translation: 'годы; лета', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=岁'
-        }
-        ,
-        {
-            symbol: '他', pinyin: 'tā', translation: 'он; его', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=他'
-        }
-        ,
-        {
-            symbol: '她', pinyin: 'tā', translation: 'она; её', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=她'
-        }
-        ,
-        {
-            symbol: '太', pinyin: 'tài', translation: 'слишком, чересчур; чрезвычайно', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=太'
-        }
-        ,
-        {
-            symbol: '天气', pinyin: 'tiānqì', translation: 'погода; климат', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=天气'
-        }
-        ,
-        {
-            symbol: '听', pinyin: 'tīng', translation: 'слушать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=听'
-        }
-        ,
-        {
-            symbol: '同学', pinyin: 'tóngxué', translation: 'соученик, однокашник', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=同学'
-        }
-        ,
-        {
-            symbol: '喂', pinyin: 'wèi', translation: 'кормить; алло!; эй!', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=喂'
-        }
-        ,
-        {
-            symbol: '我', pinyin: 'wǒ', translation: 'я; мой; наш', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=我'
-        }
-        ,
-        {
-            symbol: '我们', pinyin: 'wǒmen', translation: 'мы; наш', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=我们'
-        }
-        ,
-        {
-            symbol: '五', pinyin: 'wǔ', translation: 'пять; пятый', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=五'
-        }
-        ,
-        {
-            symbol: '喜欢', pinyin: 'xǐhuan', translation: 'нравиться; любить', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=喜欢'
-        }
-        ,
-        {
-            symbol: '下', pinyin: 'xià', translation: 'нижний; низ; послелог под, при; следующий', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=下'
-        }
-        ,
-        {
-            symbol: '下午', pinyin: 'xiàwǔ', translation: 'вторая половина дня, послеполудня', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=下午'
-        }
-        ,
-        {
-            symbol: '下雨', pinyin: 'xiàyǔ', translation: 'идёт дождь; стоит дождливаяпогода', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=下雨'
-        }
-        ,
-        {
-            symbol: '先生', pinyin: 'xiānsheng', translation: 'господин; мистер', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=先生'
-        }
-        ,
-        {
-            symbol: '现在', pinyin: 'xiànzài', translation: 'теперь; сейчас; ныне', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=现在'
-        }
-        ,
-        {
-            symbol: '想', pinyin: 'xiǎng', translation: 'думать; собираться; хотеть', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=想'
-        }
-        ,
-        {
-            symbol: '小', pinyin: 'xiǎo', translation: 'маленький; мелкий; малый; молодой; младший', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=小'
-        }
-        ,
-        {
-            symbol: '小姐', pinyin: 'xiǎojie', translation: 'барышня; мисс', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=小姐'
-        }
-        ,
-        {
-            symbol: '些', pinyin: 'xiē', translation: 'немного, несколько', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=些'
-        }
-        ,
-        {
-            symbol: '写', pinyin: 'xiě', translation: 'писать; записывать; описывать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=写'
-        }
-        ,
-        {
-            symbol: '谢谢', pinyin: 'xièxie', translation: 'спасибо, благодарю; благодарить', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=谢谢'
-        }
-        ,
-        {
-            symbol: '星期', pinyin: 'xīngqī', translation: 'неделя', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=星期'
-        }
-        ,
-        {
-            symbol: '学生', pinyin: 'xuésheng', translation: 'студент; ученик; учащийся', category: 'человек', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=学生'
-        }
-        ,
-        {
-            symbol: '学习', pinyin: 'xuéxí', translation: 'учиться; обучаться; обучение,учёба', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=学习'
-        }
-        ,
-        {
-            symbol: '学校', pinyin: 'xuéxiào', translation: 'школа; учебное заведение;училище', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=学校'
-        }
-        ,
-        {
-            symbol: '一', pinyin: 'yī', translation: 'один; единица; первый', category: 'числа', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=一'
-        }
-        ,
-        {
-            symbol: '衣服', pinyin: 'yīfu', translation: 'одежда; платье; костюм', category: 'предмет', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=衣服'
-        }
-        ,
-        {
-            symbol: '医生', pinyin: 'yīsheng', translation: 'врач, доктор', category: 'профессия', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=医生'
-        }
-        ,
-        {
-            symbol: '医院', pinyin: 'yīyuàn', translation: 'больница; госпиталь', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=医院'
-        }
-        ,
-        {
-            symbol: '椅子', pinyin: 'yǐzi', translation: 'стул', category: 'предмет', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=椅子'
-        }
-        ,
-        {
-            symbol: '有', pinyin: 'yǒu', translation: 'иметь(ся); иметь в наличии; обладать; есть', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=有'
-        }
-        ,
-        {
-            symbol: '月', pinyin: 'yuè', translation: 'луна; месяц', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=月'
-        }
-        ,
-        {
-            symbol: '在', pinyin: 'zài', translation: 'быть в живых; существовать; находиться; в; на', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=在'
-        }
-        ,
-        {
-            symbol: '再见', pinyin: 'zàijiàn', translation: 'до свидания', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=再见'
-        }
-        ,
-        {
-            symbol: '怎么', pinyin: 'zěnme', translation: 'как?, каким образом?', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=怎么'
-        }
-        ,
-        {
-            symbol: '怎么样', pinyin: 'zěnmeyàng', translation: 'как, каким образом; каков', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=怎么样'
-        }
-        ,
-        {
-            symbol: '这', pinyin: 'zhè', translation: 'это, этот', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=这'
-        }
-        ,
-        {
-            symbol: '中国', pinyin: 'zhōngguó', translation: 'Китай; китайский', category: 'страны', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=中国'
-        }
-        ,
-        {
-            symbol: '中午', pinyin: 'zhōngwǔ', translation: 'полдень', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=中午'
-        }
-        ,
-        {
-            symbol: '住', pinyin: 'zhù', translation: 'жить, проживать', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=住'
-        }
-        ,
-        {
-            symbol: '桌子', pinyin: 'zhuōzi', translation: 'стол', category: 'предмет', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=桌子'
-        }
-        ,
-        {
-            symbol: '字', pinyin: 'zì', translation: 'иероглиф; слово', category: 'базовые', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=字'
-        }
-        ,
-        {
-            symbol: '昨天', pinyin: 'zuótiān', translation: 'вчера; вчерашний день', category: 'дата', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=昨天'
-        }
-        ,
-        {
-            symbol: '坐', pinyin: 'zuò', translation: 'сидеть; садиться; ехать на [в]', category: 'диалог', audio:
-                'https://www.archchinese.com/chinese_english_dictionary.html?find=坐'
-        }
-        ,
-        {
-            symbol: '做', pinyin: 'zuò', translation: 'делать; изготавливать; быть [работать] кем-либо; писать', category:
-                'диалог', audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=做'
-        }
-    ];
+            {
+                symbol: '爱', pinyin: 'ài', translation: 'любить; любовь; любимый', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=爱'
+            }
+            ,
+            {
+                symbol: '八', pinyin: 'bā', translation: 'восемь; восьмой', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=八'
+            }
+            ,
+            {
+                symbol: '爸爸', pinyin: 'bàba', translation: 'папа, тятя', category: 'семья', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=爸爸'
+            }
+            ,
+            {
+                symbol: '杯子', pinyin: 'bēizi', translation: 'стакан; кружка; бокал; рюмка', category: 'вещи', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=杯子'
+            }
+            ,
+            {
+                symbol: '北京', pinyin: 'běijīng', translation: 'Пекин', category: 'страны', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=北京'
+            }
+            ,
+            {
+                symbol: '本', pinyin: 'běn', translation: 'счётное слово для растений,цветов', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=本'
+            }
+            ,
+            {
+                symbol: '不客气', pinyin: 'bùkěqi', translation: 'не церемоньтесь!; не стесняйтесь!', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=不客气'
+            }
+            ,
+            {
+                symbol: '不', pinyin: 'bù', translation: 'отрицательная частица не', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=不'
+            }
+            ,
+            {
+                symbol: '菜', pinyin: 'cài', translation: 'овощи; блюдо; пища; стол', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=菜'
+            }
+            ,
+            {
+                symbol: '茶', pinyin: 'chá', translation: 'чай', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=茶'
+            }
+            ,
+            {
+                symbol: '吃', pinyin: 'chī', translation: 'есть, кушать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=吃'
+            }
+            ,
+            {
+                symbol: '出租车', pinyin: 'chūzūchē', translation: 'такси', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=出租车'
+            }
+            ,
+            {
+                symbol: '打电话', pinyin: 'dǎ diànhuà', translation: 'звонить по телефону', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=打电话'
+            }
+            ,
+            {
+                symbol: '大', pinyin: 'dà', translation: 'большой; крупный; великий; огромный', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=大'
+            }
+            ,
+            {
+                symbol: '的', pinyin: 'de', translation: 'суффикс прилагательного; суффикс притяжательности', category: 'частица',
+                audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=的'
+            }
+            ,
+            {
+                symbol: '点', pinyin: 'diǎn', translation: 'капля; немножко, чуточку; точка; запятая', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=点'
+            }
+            ,
+            {
+                symbol: '电脑', pinyin: 'diànnǎo', translation: 'компьютер', category: 'техника', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=电脑'
+            }
+            ,
+            {
+                symbol: '电视', pinyin: 'diànshì', translation: 'телевидение; телевизионный', category: 'техника', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=电视'
+            }
+            ,
+            {
+                symbol: '电影', pinyin: 'diànyǐng', translation: 'кино', category: 'досуг', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=电影'
+            }
+            ,
+            {
+                symbol: '东西', pinyin: 'dōngxi', translation: 'вещь; предмет', category: 'вещь', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=东西'
+            }
+            ,
+            {
+                symbol: '都', pinyin: 'dōu', translation: 'все; всё', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=都'
+            }
+            ,
+            {
+                symbol: '读', pinyin: 'dú', translation: 'читать; зачитывать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=读'
+            }
+            ,
+            {
+                symbol: '对不起', pinyin: 'duìbuqǐ', translation: 'виноват!, простите!, извините!', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=对不起'
+            }
+            ,
+            {
+                symbol: '多', pinyin: 'duō', translation: 'много; многочисленный; свыше', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=多'
+            }
+            ,
+            {
+                symbol: '多少', pinyin: 'duōshao', translation: 'сколько?', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=多少'
+            }
+            ,
+            {
+                symbol: '儿子', pinyin: 'érzi', translation: 'сын', category: 'семья', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=儿子'
+            }
+            ,
+            {
+                symbol: '二', pinyin: 'èr', translation: 'два; второй', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=二'
+            }
+            ,
+            {
+                symbol: '饭馆', pinyin: 'fànguǎn', translation: 'ресторан; столовая', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=饭馆'
+            }
+            ,
+            {
+                symbol: '飞机', pinyin: 'fēijī', translation: 'самолёт', category: 'техника', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=飞机'
+            }
+            ,
+            {
+                symbol: '分钟', pinyin: 'fēnzhōng', translation: 'минута', category: 'время', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=分钟'
+            }
+            ,
+            {
+                symbol: '高兴', pinyin: 'gāoxìng', translation: 'радоваться; радостный', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=高兴'
+            }
+            ,
+            {
+                symbol: '个', pinyin: 'gè', translation: 'универсальное сч. сл.;отдельный; индивидуальный', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=个'
+            }
+            ,
+            {
+                symbol: '工作', pinyin: 'gōngzuò', translation: 'работать; работа', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=工作'
+            }
+            ,
+            {
+                symbol: '狗', pinyin: 'gǒu', translation: 'собака; собачий', category: 'животные', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=狗'
+            }
+            ,
+            {
+                symbol: '汉语', pinyin: 'hànyǔ', translation: 'китайский язык', category: 'языки', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=汉语'
+            }
+            ,
+            {
+                symbol: '好', pinyin: 'hǎo', translation: 'хороший; хорошо; приятный; удобный', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=好'
+            }
+            ,
+            {
+                symbol: '喝', pinyin: 'hē', translation: 'пить', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=喝'
+            }
+            ,
+            {
+                symbol: '和', pinyin: 'hé', translation: 'мирный; союз и; предлог с', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=和'
+            }
+            ,
+            {
+                symbol: '很', pinyin: 'hěn', translation: 'очень; весьма', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=很'
+            }
+            ,
+            {
+                symbol: '后面', pinyin: 'hòumiàn', translation: 'задняя сторона; зад; позади,сзади; задний', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=后面'
+            }
+            ,
+            {
+                symbol: '回', pinyin: 'huí', translation: 'возвращаться', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=回'
+            }
+            ,
+            {
+                symbol: '会', pinyin: 'huì', translation: 'уметь; мочь; владеть; собрание; заседание', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=会'
+            }
+            ,
+            {
+                symbol: '火车站', pinyin: 'huǒchēzhàn', translation: 'вокзал; железнодорожная станция', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=火车站'
+            }
+            ,
+            {
+                symbol: '几', pinyin: 'jǐ', translation: 'сколько?; несколько; немного', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=几'
+            }
+            ,
+            {
+                symbol: '家', pinyin: 'jiā', translation: 'семья; семейство; дом; домашний', category: 'семья', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=家'
+            }
+            ,
+            {
+                symbol: '叫', pinyin: 'jiào', translation: 'кричать; крик; звать; подзывать; вызывать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=叫'
+            }
+            ,
+            {
+                symbol: '今天', pinyin: 'jīntiān', translation: 'сегодня; нынешний день', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=今天'
+            }
+            ,
+            {
+                symbol: '九', pinyin: 'jiǔ', translation: 'девять; девятый', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=九'
+            }
+            ,
+            {
+                symbol: '开', pinyin: 'kāi', translation: 'открывать; управлять; вести; включать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=开'
+            }
+            ,
+            {
+                symbol: '看', pinyin: 'kàn', translation: 'смотреть; читать (про себя); навестить', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=看'
+            }
+            ,
+            {
+                symbol: '看见', pinyin: 'kànjiàn', translation: 'увидеть; видеть', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=看见'
+            }
+            ,
+            {
+                symbol: '块', pinyin: 'kuài', translation: 'сч. сл. для основных денежных единиц; кусок; глыба', category: 'частица',
+                audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=块'
+            }
+            ,
+            {
+                symbol: '来', pinyin: 'lái', translation: 'приходить; прибывать; приезжать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=来'
+            }
+            ,
+            {
+                symbol: '老师', pinyin: 'lǎoshī', translation: 'учитель; преподаватель', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=老师'
+            }
+            ,
+            {
+                symbol: '了', pinyin: 'le', translation: 'глагольный суффикс завершенности действия', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=了'
+            }
+            ,
+            {
+                symbol: '冷', pinyin: 'lěng', translation: 'холодный; холодно; холод', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=冷'
+            }
+            ,
+            {
+                symbol: '里', pinyin: 'lǐ', translation: 'внутри; в', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=里'
+            }
+            ,
+            {
+                symbol: '零', pinyin: 'líng', translation: 'ноль; нолевой', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=零'
+            }
+            ,
+            {
+                symbol: '六', pinyin: 'liù', translation: 'шесть; шестой', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=六'
+            }
+            ,
+            {
+                symbol: '妈妈', pinyin: 'māma', translation: 'мама', category: 'семья', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=妈妈'
+            }
+            ,
+            {
+                symbol: '吗', pinyin: 'ma', translation: 'фразовая частица, выражающая вопрос', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=吗'
+            }
+            ,
+            {
+                symbol: '买', pinyin: 'mǎi', translation: 'покупать, приобретать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=买'
+            }
+            ,
+            {
+                symbol: '猫', pinyin: 'māo', translation: 'кошка', category: 'животные', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=猫'
+            }
+            ,
+            {
+                symbol: '没', pinyin: 'méi', translation: 'отрицательная частица', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=没'
+            }
+            ,
+            {
+                symbol: '没关系', pinyin: 'méi guānxi', translation: 'неважно; ничего; пустяки', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=没关系'
+            }
+            ,
+            {
+                symbol: '米饭', pinyin: 'mǐfàn', translation: 'варёный рис', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=米饭'
+            }
+            ,
+            {
+                symbol: '明天', pinyin: 'míngtiān', translation: 'завтра; завтрашний день', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=明天'
+            }
+            ,
+            {
+                symbol: '名字', pinyin: 'míngzi', translation: 'имя (человека); кличка(животного)', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=名字'
+            }
+            ,
+            {
+                symbol: '哪', pinyin: 'nǎ', translation: 'какой; который', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=哪'
+            }
+            ,
+            {
+                symbol: '那', pinyin: 'nà', translation: 'тот; то; тогда, в таком случае', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=那'
+            }
+            ,
+            {
+                symbol: '呢', pinyin: 'ne', translation: 'фразовая частица, выражающая вопрос же?', category: 'частица', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=呢'
+            }
+            ,
+            {
+                symbol: '能', pinyin: 'néng', translation: 'способный; способность', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=能'
+            }
+            ,
+            {
+                symbol: '你', pinyin: 'nǐ', translation: 'ты; вы; твой; ваш', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=你'
+            }
+            ,
+            {
+                symbol: '年', pinyin: 'nián', translation: 'год; годы', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=年'
+            }
+            ,
+            {
+                symbol: '女儿', pinyin: 'nǚ’er', translation: 'дочь', category: 'семья', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=女儿'
+            }
+            ,
+            {
+                symbol: '朋友', pinyin: 'péngyou', translation: 'друг, товарищ; друзья', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=朋友'
+            }
+            ,
+            {
+                symbol: '漂亮', pinyin: 'piàoliang', translation: 'красивый', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=漂亮'
+            }
+            ,
+            {
+                symbol: '苹果', pinyin: 'píngguǒ', translation: 'яблоко', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=苹果'
+            }
+            ,
+            {
+                symbol: '七', pinyin: 'qī', translation: 'семь; седьмой', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=七'
+            }
+            ,
+            {
+                symbol: '钱', pinyin: 'qián', translation: 'деньги', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=钱'
+            }
+            ,
+            {
+                symbol: '前面', pinyin: 'qiánmian', translation: 'перед; передний; впереди; перёд; выше; ранее', category: 'базовые',
+                audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=前面'
+            }
+            ,
+            {
+                symbol: '请', pinyin: 'qǐng', translation: 'просить; пожалуйста!; приглашать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=请'
+            }
+            ,
+            {
+                symbol: '去', pinyin: 'qù', translation: 'уходить; отправляться; идти', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=去'
+            }
+            ,
+            {
+                symbol: '热', pinyin: 'rè', translation: 'горячий; увлечение; мода', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=热'
+            }
+            ,
+            {
+                symbol: '人', pinyin: 'rén', translation: 'человек; люди', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=人'
+            }
+            ,
+            {
+                symbol: '认识', pinyin: 'rènshi', translation: 'знать; быть знакомым;знакомиться', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=认识'
+            }
+            ,
+            {
+                symbol: '日', pinyin: 'rì', translation: 'солнце; солнечный; день; число, дата', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=日'
+            }
+            ,
+            {
+                symbol: '三', pinyin: 'sān', translation: 'три; третий', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=三'
+            }
+            ,
+            {
+                symbol: '商店', pinyin: 'shāngdiàn', translation: 'магазин', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=商店'
+            }
+            ,
+            {
+                symbol: '上', pinyin: 'shàng', translation: 'верх; прошлый; на; в', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=上'
+            }
+            ,
+            {
+                symbol: '上午', pinyin: 'shàngwǔ', translation: 'до полудня', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=上午'
+            }
+            ,
+            {
+                symbol: '少', pinyin: 'shǎo', translation: 'мало; немного; редко', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=少'
+            }
+            ,
+            {
+                symbol: '谁', pinyin: 'shuí, shéi', translation: 'кто; кого; чей', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=谁'
+            }
+            ,
+            {
+                symbol: '什么', pinyin: 'shénme', translation: 'что?, что такое?; какой?; как?', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=什么'
+            }
+            ,
+            {
+                symbol: '十', pinyin: 'shí', translation: 'десять; десятый', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=十'
+            }
+            ,
+            {
+                symbol: '时候', pinyin: 'shíhou', translation: 'время, промежуток; времени; вовремя', category: 'время', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=时候'
+            }
+            ,
+            {
+                symbol: '是', pinyin: 'shì', translation: 'есть; быть; являться; да; правда', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=是'
+            }
+            ,
+            {
+                symbol: '书', pinyin: 'shū', translation: 'книга', category: 'предмет', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=书'
+            }
+            ,
+            {
+                symbol: '水', pinyin: 'shuǐ', translation: 'вода; водяной; гидро-', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=水'
+            }
+            ,
+            {
+                symbol: '水果', pinyin: 'shuǐguǒ', translation: 'фрукты; фруктовый', category: 'еда', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=水果'
+            }
+            ,
+            {
+                symbol: '睡觉', pinyin: 'shuìjiào', translation: 'спать', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=睡觉'
+            }
+            ,
+            {
+                symbol: '说话', pinyin: 'shuōhuà', translation: 'говорить; разговаривать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=说话'
+            }
+            ,
+            {
+                symbol: '四', pinyin: 'sì', translation: 'четыре; четвёртый', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=四'
+            }
+            ,
+            {
+                symbol: '岁', pinyin: 'suì', translation: 'годы; лета', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=岁'
+            }
+            ,
+            {
+                symbol: '他', pinyin: 'tā', translation: 'он; его', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=他'
+            }
+            ,
+            {
+                symbol: '她', pinyin: 'tā', translation: 'она; её', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=她'
+            }
+            ,
+            {
+                symbol: '太', pinyin: 'tài', translation: 'слишком, чересчур; чрезвычайно', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=太'
+            }
+            ,
+            {
+                symbol: '天气', pinyin: 'tiānqì', translation: 'погода; климат', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=天气'
+            }
+            ,
+            {
+                symbol: '听', pinyin: 'tīng', translation: 'слушать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=听'
+            }
+            ,
+            {
+                symbol: '同学', pinyin: 'tóngxué', translation: 'соученик, однокашник', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=同学'
+            }
+            ,
+            {
+                symbol: '喂', pinyin: 'wèi', translation: 'кормить; алло!; эй!', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=喂'
+            }
+            ,
+            {
+                symbol: '我', pinyin: 'wǒ', translation: 'я; мой; наш', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=我'
+            }
+            ,
+            {
+                symbol: '我们', pinyin: 'wǒmen', translation: 'мы; наш', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=我们'
+            }
+            ,
+            {
+                symbol: '五', pinyin: 'wǔ', translation: 'пять; пятый', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=五'
+            }
+            ,
+            {
+                symbol: '喜欢', pinyin: 'xǐhuan', translation: 'нравиться; любить', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=喜欢'
+            }
+            ,
+            {
+                symbol: '下', pinyin: 'xià', translation: 'нижний; низ; послелог под, при; следующий', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=下'
+            }
+            ,
+            {
+                symbol: '下午', pinyin: 'xiàwǔ', translation: 'вторая половина дня, послеполудня', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=下午'
+            }
+            ,
+            {
+                symbol: '下雨', pinyin: 'xiàyǔ', translation: 'идёт дождь; стоит дождливаяпогода', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=下雨'
+            }
+            ,
+            {
+                symbol: '先生', pinyin: 'xiānsheng', translation: 'господин; мистер', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=先生'
+            }
+            ,
+            {
+                symbol: '现在', pinyin: 'xiànzài', translation: 'теперь; сейчас; ныне', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=现在'
+            }
+            ,
+            {
+                symbol: '想', pinyin: 'xiǎng', translation: 'думать; собираться; хотеть', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=想'
+            }
+            ,
+            {
+                symbol: '小', pinyin: 'xiǎo', translation: 'маленький; мелкий; малый; молодой; младший', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=小'
+            }
+            ,
+            {
+                symbol: '小姐', pinyin: 'xiǎojie', translation: 'барышня; мисс', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=小姐'
+            }
+            ,
+            {
+                symbol: '些', pinyin: 'xiē', translation: 'немного, несколько', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=些'
+            }
+            ,
+            {
+                symbol: '写', pinyin: 'xiě', translation: 'писать; записывать; описывать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=写'
+            }
+            ,
+            {
+                symbol: '谢谢', pinyin: 'xièxie', translation: 'спасибо, благодарю; благодарить', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=谢谢'
+            }
+            ,
+            {
+                symbol: '星期', pinyin: 'xīngqī', translation: 'неделя', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=星期'
+            }
+            ,
+            {
+                symbol: '学生', pinyin: 'xuésheng', translation: 'студент; ученик; учащийся', category: 'человек', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=学生'
+            }
+            ,
+            {
+                symbol: '学习', pinyin: 'xuéxí', translation: 'учиться; обучаться; обучение,учёба', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=学习'
+            }
+            ,
+            {
+                symbol: '学校', pinyin: 'xuéxiào', translation: 'школа; учебное заведение;училище', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=学校'
+            }
+            ,
+            {
+                symbol: '一', pinyin: 'yī', translation: 'один; единица; первый', category: 'числа', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=一'
+            }
+            ,
+            {
+                symbol: '衣服', pinyin: 'yīfu', translation: 'одежда; платье; костюм', category: 'предмет', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=衣服'
+            }
+            ,
+            {
+                symbol: '医生', pinyin: 'yīsheng', translation: 'врач, доктор', category: 'профессия', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=医生'
+            }
+            ,
+            {
+                symbol: '医院', pinyin: 'yīyuàn', translation: 'больница; госпиталь', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=医院'
+            }
+            ,
+            {
+                symbol: '椅子', pinyin: 'yǐzi', translation: 'стул', category: 'предмет', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=椅子'
+            }
+            ,
+            {
+                symbol: '有', pinyin: 'yǒu', translation: 'иметь(ся); иметь в наличии; обладать; есть', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=有'
+            }
+            ,
+            {
+                symbol: '月', pinyin: 'yuè', translation: 'луна; месяц', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=月'
+            }
+            ,
+            {
+                symbol: '在', pinyin: 'zài', translation: 'быть в живых; существовать; находиться; в; на', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=在'
+            }
+            ,
+            {
+                symbol: '再见', pinyin: 'zàijiàn', translation: 'до свидания', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=再见'
+            }
+            ,
+            {
+                symbol: '怎么', pinyin: 'zěnme', translation: 'как?, каким образом?', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=怎么'
+            }
+            ,
+            {
+                symbol: '怎么样', pinyin: 'zěnmeyàng', translation: 'как, каким образом; каков', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=怎么样'
+            }
+            ,
+            {
+                symbol: '这', pinyin: 'zhè', translation: 'это, этот', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=这'
+            }
+            ,
+            {
+                symbol: '中国', pinyin: 'zhōngguó', translation: 'Китай; китайский', category: 'страны', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=中国'
+            }
+            ,
+            {
+                symbol: '中午', pinyin: 'zhōngwǔ', translation: 'полдень', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=中午'
+            }
+            ,
+            {
+                symbol: '住', pinyin: 'zhù', translation: 'жить, проживать', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=住'
+            }
+            ,
+            {
+                symbol: '桌子', pinyin: 'zhuōzi', translation: 'стол', category: 'предмет', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=桌子'
+            }
+            ,
+            {
+                symbol: '字', pinyin: 'zì', translation: 'иероглиф; слово', category: 'базовые', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=字'
+            }
+            ,
+            {
+                symbol: '昨天', pinyin: 'zuótiān', translation: 'вчера; вчерашний день', category: 'дата', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=昨天'
+            }
+            ,
+            {
+                symbol: '坐', pinyin: 'zuò', translation: 'сидеть; садиться; ехать на [в]', category: 'диалог', audio:
+                    'https://www.archchinese.com/chinese_english_dictionary.html?find=坐'
+            }
+            ,
+            {
+                symbol: '做', pinyin: 'zuò', translation: 'делать; изготавливать; быть [работать] кем-либо; писать', category:
+                    'диалог', audio: 'https://www.archchinese.com/chinese_english_dictionary.html?find=做'
+            }
+        ];
 
         // База данных диалогов
         const dialogues = [
-        {
-            title: "Приветствие 1",
-            module: "1",
-            lines: [
-                {
-                    symbol: "你好！",
-                    pinyin: "Nǐ hǎo!",
-                    translation: "Привет!",
-                    audio: "#"
-                },
-                {
-                    symbol: "你好！",
-                    pinyin: "Nǐ hǎo!",
-                    translation: "Привет!",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Приветствие 2",
-            module: "1",
-            lines: [
-                {
-                    symbol: "你好！",
-                    pinyin: "Nǐ hǎo!",
-                    translation: "Привет!",
-                    audio: "#"
-                },
-                {
-                    symbol: "你们好!",
-                    pinyin: "Nǐmen hǎo!",
-                    translation: "Привет всем!",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Извинение",
-            module: "1",
-            lines: [
-                {
-                    symbol: "对不起!",
-                    pinyin: "duìbuqǐ!",
-                    translation: "Извините!",
-                    audio: "#"
-                },
-                {
-                    symbol: "没关系!",
-                    pinyin: "méi guānxi!",
-                    translation: "Ничего страшного!",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Как тебя зовут?",
-            module: "1",
-            lines: [
-                {
-                    symbol: "你叫什么名字?",
-                    pinyin: "nǐ jiào shénme míngzi",
-                    translation: "Как тебя зовут?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我叫 尼基塔",
-                    pinyin: "wǒ jiào níjī tǎ",
-                    translation: "Меня зовут Никита",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Вы учитель?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "你是老师吗?",
-                    pinyin: "nǐ shì lǎo shī ma",
-                    translation: "Вы учитель?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我不是老师，我是学生。",
-                    pinyin: "wǒ bú shì lǎo shī, wǒ shì xué sheng",
-                    translation: "Я не учитель. Я ученик.(студент)",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Ты китаец?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "你是中国人吗?",
-                    pinyin: "nǐ shì zhōng guó rén ma ?",
-                    translation: "Ты китаец?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 不 是 中国人, 我 是 美国人",
-                    pinyin: "wǒ bú shì zhōng guó rén, wǒ shì měiguó rén",
-                    translation: "Я не китаец, я американец",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Кто он такой?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "他是谁?",
-                    pinyin: "tā shì shéi?",
-                    translation: "Кто он такой?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 是 我的 汉语 老师, 她叫 ​李 月",
-                    pinyin: "tā shì wǒ de hànyú lǎoshī, tā jiào Lǐ Yuè",
-                    translation: "Он мой учитель китайского языка, его зовут (имя)",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Откуда ты?, Из какой ты страны?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "你是哪国人?",
-                    pinyin: "nǐ shì nǎ guó rén ?",
-                    translation: "Откуда ты?, Из какой ты страны?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 是 美国人. 你呢?",
-                    pinyin: "wǒ shì měiguó rén. Nǐ ne?",
-                    translation: "Я американец. А ты?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 是 中国人",
-                    pinyin: "wǒ shì zhōng guó rén",
-                    translation: "Я Китаец.",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Кто он такой? (ученик - друг)",
-            module: "2",
-            lines: [
-                {
-                    symbol: "他是谁?",
-                    pinyin: "tā shì shéi ?",
-                    translation: "Кто он такой?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 是 我 ​同​学",
-                    pinyin: "tā shì wǒ tóng xué",
-                    translation: "Он мой одноклассник",
-                    audio: "#"
-                },
-                {
-                    symbol: "他呢? 他是你 同学 吗",
-                    pinyin: "tā ne? tā shì nǐ tóngxué ma?",
-                    translation: "А что насчет него? Он твой одноклассник?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他不是我 同学, 他是我 朋友",
-                    pinyin: "tā bú shì wǒ tóngxué, tā shì wǒ péng you.",
-                    translation: "Он не мой одноклассник, он мой друг",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Сколько человек в твоей семье?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "你家有几口人?",
-                    pinyin: "nǐ jia yóu jí kǒu rén ?",
-                    translation: "Сколько человек в твоей семье?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我家有​三口人.",
-                    pinyin: "wǒ jia yóu sān kǒu rén",
-                    translation: "В моей семье три человека",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "​Сколько лет твоему ребенку?",
-            module: "2",
-            lines: [
-                {
-                    symbol: "​你 奴儿 几 岁 ​了?",
-                    pinyin: "nǐ nú'ér jǐ suì le?",
-                    translation: "​Сколько лет твоему ребенку?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他今年 四 岁​了",
-                    pinyin: "tā jīnnián sì suì le",
-                    translation: "Eму исполняется четыре года",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Сколько лет учителю Ли?",
-            module: "3",
-            lines: [
-                {
-                    symbol: "李 老师 多 大 ​了?",
-                    pinyin: "lǐ lǎoshī duō dà le",
-                    translation: "Сколько лет учителю Ли?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 今​年 五十 岁​了.",
-                    pinyin: "tā jīnnián wǔ shí suì le",
-                    translation: "В этом году ему исполняется пятьдесят лет.",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 奴儿 呢?",
-                    pinyin: "tā nú'ér ne?",
-                    translation: "А сколько дочери?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 奴儿 今​年 ​二​十 岁",
-                    pinyin: "tā nú'ér jīnnián èrshí suì",
-                    translation: "Его дочери исполняется 20 лет.",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "​Вы говорите по-китайски?",
-            module: "4",
-            lines: [
-                {
-                    symbol: "​你 会 说 汉语 吗?",
-                    pinyin: "Nǐ huì shuō hànyǔ ma?",
-                    translation: "​Вы говорите по-китайски?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 会 说 汉语",
-                    pinyin: "wǒ huì shuō hànyǔ",
-                    translation: "Я могу говорить по-китайски",
-                    audio: "#"
-                },
-                {
-                    symbol: "​你 妈妈 会 说 汉语 吗?",
-                    pinyin: "Nǐ māma huì shuō hànyǔ ma?",
-                    translation: "​Твоя мама говорит по-китайски?",
-                    audio: "#"
-                },
-                {
-                    symbol: "他 不 会 说.",
-                    pinyin: "tā bù huì shuō.",
-                    translation: "Она не говорит.",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Вкусная ли китайская еда?",
-            module: "4",
-            lines: [
-                {
-                    symbol: "中国 菜 好 吃 吗?",
-                    pinyin: "zhōngguó cài hǎo chī ma",
-                    translation: "Вкусна ли китайская еда?",
-                    audio: "#"
-                },
-                {
-                    symbol: "中国 菜 很 好 吃",
-                    pinyin: "zhōngguó cài hěn hǎo chī",
-                    translation: "Китайская еда очень вкусная",
-                    audio: "#"
-                },
-                {
-                    symbol: "​你 会 做 中国 菜 吗?",
-                    pinyin: "Nǐ huì zuò zhōngguó cài ma",
-                    translation: "Вы умеете готовить блюда китайской кухни?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 不 会 做",
-                    pinyin: "wǒ bù huì zuò.",
-                    translation: "Я не умею это делать.",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Вы умеете писать китайские иероглифы?",
-            module: "4",
-            lines: [
-                {
-                    symbol: "​你 会 写 汉​字 吗?",
-                    pinyin: "Nǐ huì xiě hànzì ma",
-                    translation: "​Вы умеете писать китайские иероглифы?",
-                    audio: "#"
-                },
-                {
-                    symbol: "我 会 写.",
-                    pinyin: "wǒ huì xiě.",
-                    translation: "Я умею писать.",
-                    audio: "#"
-                },
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Пустой",
-            module: "3",
-            lines: [
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-        {
-            title: "Пустой",
-            module: "3",
-            lines: [
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-                {
-                    symbol: "",
-                    pinyin: "",
-                    translation: "",
-                    audio: "#"
-                },
-            ],
-            category: "диалог"
-        },
-    ];
+            {
+                title: "Приветствие 1",
+                module: "1",
+                lines: [
+                    {
+                        symbol: "你好！",
+                        pinyin: "Nǐ hǎo!",
+                        translation: "Привет!",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "你好！",
+                        pinyin: "Nǐ hǎo!",
+                        translation: "Привет!",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Приветствие 2",
+                module: "1",
+                lines: [
+                    {
+                        symbol: "你好！",
+                        pinyin: "Nǐ hǎo!",
+                        translation: "Привет!",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "你们好!",
+                        pinyin: "Nǐmen hǎo!",
+                        translation: "Привет всем!",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Извинение",
+                module: "1",
+                lines: [
+                    {
+                        symbol: "对不起!",
+                        pinyin: "duìbuqǐ!",
+                        translation: "Извините!",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "没关系!",
+                        pinyin: "méi guānxi!",
+                        translation: "Ничего страшного!",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Как тебя зовут?",
+                module: "1",
+                lines: [
+                    {
+                        symbol: "你叫什么名字?",
+                        pinyin: "nǐ jiào shénme míngzi",
+                        translation: "Как тебя зовут?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我叫 尼基塔",
+                        pinyin: "wǒ jiào níjī tǎ",
+                        translation: "Меня зовут Никита",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Вы учитель?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "你是老师吗?",
+                        pinyin: "nǐ shì lǎo shī ma",
+                        translation: "Вы учитель?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我不是老师，我是学生。",
+                        pinyin: "wǒ bú shì lǎo shī, wǒ shì xué sheng",
+                        translation: "Я не учитель. Я ученик.(студент)",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Ты китаец?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "你是中国人吗?",
+                        pinyin: "nǐ shì zhōng guó rén ma ?",
+                        translation: "Ты китаец?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 不 是 中国人, 我 是 美国人",
+                        pinyin: "wǒ bú shì zhōng guó rén, wǒ shì měiguó rén",
+                        translation: "Я не китаец, я американец",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Кто он такой?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "他是谁?",
+                        pinyin: "tā shì shéi?",
+                        translation: "Кто он такой?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 是 我的 汉语 老师, 她叫 ​李 月",
+                        pinyin: "tā shì wǒ de hànyú lǎoshī, tā jiào Lǐ Yuè",
+                        translation: "Он мой учитель китайского языка, его зовут (имя)",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Откуда ты?, Из какой ты страны?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "你是哪国人?",
+                        pinyin: "nǐ shì nǎ guó rén ?",
+                        translation: "Откуда ты?, Из какой ты страны?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 是 美国人. 你呢?",
+                        pinyin: "wǒ shì měiguó rén. Nǐ ne?",
+                        translation: "Я американец. А ты?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 是 中国人",
+                        pinyin: "wǒ shì zhōng guó rén",
+                        translation: "Я Китаец.",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Кто он такой? (ученик - друг)",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "他是谁?",
+                        pinyin: "tā shì shéi ?",
+                        translation: "Кто он такой?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 是 我 ​同​学",
+                        pinyin: "tā shì wǒ tóng xué",
+                        translation: "Он мой одноклассник",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他呢? 他是你 同学 吗",
+                        pinyin: "tā ne? tā shì nǐ tóngxué ma?",
+                        translation: "А что насчет него? Он твой одноклассник?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他不是我 同学, 他是我 朋友",
+                        pinyin: "tā bú shì wǒ tóngxué, tā shì wǒ péng you.",
+                        translation: "Он не мой одноклассник, он мой друг",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Сколько человек в твоей семье?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "你家有几口人?",
+                        pinyin: "nǐ jia yóu jí kǒu rén ?",
+                        translation: "Сколько человек в твоей семье?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我家有​三口人.",
+                        pinyin: "wǒ jia yóu sān kǒu rén",
+                        translation: "В моей семье три человека",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "​Сколько лет твоему ребенку?",
+                module: "2",
+                lines: [
+                    {
+                        symbol: "​你 奴儿 几 岁 ​了?",
+                        pinyin: "nǐ nú'ér jǐ suì le?",
+                        translation: "​Сколько лет твоему ребенку?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他今年 四 岁​了",
+                        pinyin: "tā jīnnián sì suì le",
+                        translation: "Eму исполняется четыре года",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Сколько лет учителю Ли?",
+                module: "3",
+                lines: [
+                    {
+                        symbol: "李 老师 多 大 ​了?",
+                        pinyin: "lǐ lǎoshī duō dà le",
+                        translation: "Сколько лет учителю Ли?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 今​年 五十 岁​了.",
+                        pinyin: "tā jīnnián wǔ shí suì le",
+                        translation: "В этом году ему исполняется пятьдесят лет.",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 奴儿 呢?",
+                        pinyin: "tā nú'ér ne?",
+                        translation: "А сколько дочери?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 奴儿 今​年 ​二​十 岁",
+                        pinyin: "tā nú'ér jīnnián èrshí suì",
+                        translation: "Его дочери исполняется 20 лет.",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "​Вы говорите по-китайски?",
+                module: "4",
+                lines: [
+                    {
+                        symbol: "​你 会 说 汉语 吗?",
+                        pinyin: "Nǐ huì shuō hànyǔ ma?",
+                        translation: "​Вы говорите по-китайски?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 会 说 汉语",
+                        pinyin: "wǒ huì shuō hànyǔ",
+                        translation: "Я могу говорить по-китайски",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "​你 妈妈 会 说 汉语 吗?",
+                        pinyin: "Nǐ māma huì shuō hànyǔ ma?",
+                        translation: "​Твоя мама говорит по-китайски?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "他 不 会 说.",
+                        pinyin: "tā bù huì shuō.",
+                        translation: "Она не говорит.",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Вкусная ли китайская еда?",
+                module: "4",
+                lines: [
+                    {
+                        symbol: "中国 菜 好 吃 吗?",
+                        pinyin: "zhōngguó cài hǎo chī ma",
+                        translation: "Вкусна ли китайская еда?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "中国 菜 很 好 吃",
+                        pinyin: "zhōngguó cài hěn hǎo chī",
+                        translation: "Китайская еда очень вкусная",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "​你 会 做 中国 菜 吗?",
+                        pinyin: "Nǐ huì zuò zhōngguó cài ma",
+                        translation: "Вы умеете готовить блюда китайской кухни?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 不 会 做",
+                        pinyin: "wǒ bù huì zuò.",
+                        translation: "Я не умею это делать.",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Вы умеете писать китайские иероглифы?",
+                module: "4",
+                lines: [
+                    {
+                        symbol: "​你 会 写 汉​字 吗?",
+                        pinyin: "Nǐ huì xiě hànzì ma",
+                        translation: "​Вы умеете писать китайские иероглифы?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "我 会 写.",
+                        pinyin: "wǒ huì xiě.",
+                        translation: "Я умею писать.",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "这个 字 怎么 写?",
+                        pinyin: "zhège zì zěnme xiě?",
+                        translation: "Как правильно написать это слово?",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "对不起, 这个 字 我 会 读, 不 会 写.",
+                        pinyin: "duìbuqǐ, zhège zì wǒ huì dú, bù huì xiě.",
+                        translation: "Извините, я могу прочитать это слово, но не написать его.",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            }
+        ];
 
         // DOM элементы
         const searchInput = document.getElementById('search');
@@ -1631,6 +1828,32 @@
         const contentSections = document.querySelectorAll('.content-section');
         const dialoguesSearchInput = document.getElementById('dialogues-search');
         const dialoguesModuleFilter = document.getElementById('dialogues-module');
+
+        // Элементы теста
+        const testStartSection = document.getElementById('test-start');
+        const testCardSection = document.getElementById('test-card');
+        const testResultsSection = document.getElementById('test-results');
+        const startTestBtn = document.getElementById('start-test-btn');
+        const rememberBtn = document.getElementById('remember-btn');
+        const forgetBtn = document.getElementById('forget-btn');
+        const testCharacterElement = document.getElementById('test-character');
+        const testTimerElement = document.getElementById('test-timer');
+        const testProgressElement = document.getElementById('test-progress');
+        const testStatsElement = document.getElementById('test-stats');
+        const testResultsListElement = document.getElementById('test-results-list');
+        const restartTestBtn = document.getElementById('restart-test-btn');
+        const newTestBtn = document.getElementById('new-test-btn');
+        const finishTestBtn = document.getElementById('finish-test-btn');
+
+        // Переменные для теста
+        let testCharacters = [];
+        let currentTestIndex = 0;
+        let rememberedCount = 0;
+        let forgottenCount = 0;
+        let testStartTime;
+        let testEndTime;
+        let timerInterval;
+        let timeLeft = 5 * 60; // 5 минут в секундах
 
         // Функция для удаления тонов из пиньиня
         function removeTones(pinyin) {
@@ -1753,26 +1976,198 @@
             const module = dialoguesModuleFilter.value;
 
             const filtered = dialogues.filter(dialog => {
-                const matchesSearch = dialog.title.toLowerCase().includes(searchTerm);
+                // Поиск по названию диалога
+                const matchesTitle = dialog.title.toLowerCase().includes(searchTerm);
+
+                // Поиск по модулю
                 const matchesModule = module === 'all' || dialog.module === module;
 
-                return matchesSearch && matchesModule;
+                // Если поисковой запрос пустой, возвращаем только по модулю
+                if (searchTerm.trim() === '') {
+                    return matchesModule;
+                }
+
+                // Если находим в названии, сразу возвращаем true
+                if (matchesTitle) return true;
+
+                // Поиск по строкам диалога
+                const matchesLines = dialog.lines.some(line => {
+                    return (
+                        line.symbol.includes(searchTerm) || // поиск по иероглифам
+                        comparePinyin(searchTerm, line.pinyin) || // поиск по пиньиню (без тонов)
+                        line.translation.toLowerCase().includes(searchTerm) // поиск по переводу
+                    );
+                });
+
+                return matchesModule && (matchesTitle || matchesLines);
             });
 
             displayDialogues(filtered);
         }
 
-        // Переключение между вкладками
+        // Функции для теста
+        function startTest() {
+            // Выбираем 10 случайных иероглифов
+            testCharacters = getRandomCharacters(10);
+            currentTestIndex = 0;
+            rememberedCount = 0;
+            forgottenCount = 0;
+            timeLeft = 5 * 60; // 5 минут в секундах
+
+            // Запускаем таймер
+            startTimer();
+
+            // Показываем первый иероглиф
+            showNextCharacter();
+
+            // Переключаем видимость секций
+            testStartSection.style.display = 'none';
+            testCardSection.style.display = 'flex';
+            testResultsSection.style.display = 'none';
+        }
+
+        function getRandomCharacters(count) {
+            // Создаем копию массива, чтобы не изменять оригинальный
+            const shuffled = [...characters].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function startTimer() {
+            testStartTime = new Date();
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            testTimerElement.textContent = `Осталось времени: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function showNextCharacter() {
+            if (currentTestIndex >= testCharacters.length) {
+                finishTest();
+                return;
+            }
+
+            testCharacterElement.textContent = testCharacters[currentTestIndex].symbol;
+            testProgressElement.textContent = `Вопрос ${currentTestIndex + 1} из ${testCharacters.length}`;
+        }
+
+        function rememberCharacter() {
+            testCharacters[currentTestIndex].remembered = true;
+            rememberedCount++;
+            currentTestIndex++;
+            showNextCharacter();
+        }
+
+        function forgetCharacter() {
+            testCharacters[currentTestIndex].remembered = false;
+            forgottenCount++;
+            currentTestIndex++;
+            showNextCharacter();
+        }
+
+        function finishTest() {
+            clearInterval(timerInterval);
+            testEndTime = new Date();
+
+            // Рассчитываем время прохождения теста
+            const timeSpent = Math.floor((testEndTime - testStartTime) / 1000);
+            const minutes = Math.floor(timeSpent / 60);
+            const seconds = timeSpent % 60;
+
+            // Показываем результаты
+            showResults(minutes, seconds);
+
+            // Переключаем видимость секций
+            testCardSection.style.display = 'none';
+            testResultsSection.style.display = 'flex';
+        }
+
+        function showResults(minutes, seconds) {
+            // Обновляем статистику
+            testStatsElement.innerHTML = `
+                Вы завершили тест за ${minutes}:${seconds < 10 ? '0' : ''}${seconds}
+                <br>
+                Правильных ответов: ${rememberedCount}
+                <br>
+                Неправильных ответов:${forgottenCount}
+        `;
+
+            // Показываем список иероглифов
+            testResultsListElement.innerHTML = '';
+
+            testCharacters.forEach(char => {
+                const item = document.createElement('div');
+                item.className = 'test-result-item';
+
+                item.innerHTML = `
+                <div class="test-result-symbol" > ${char.symbol}</div>
+                    <div class="test-result-info">
+                        <div class="test-result-pinyin">${char.pinyin}</div>
+                        <div class="test-result-translation">${char.translation}</div>
+                    </div>
+                    <div class="test-result-status ${char.remembered ? 'test-result-remembered' : 'test-result-forgotten'}">
+                        ${char.remembered ? 'Помню' : 'Не помню'}
+                    </div>
+        `;
+
+                testResultsListElement.appendChild(item);
+            });
+        }
+
+        function restartTest() {
+            // Сбрасываем индексы и счетчики
+            currentTestIndex = 0;
+            rememberedCount = 0;
+            forgottenCount = 0;
+            timeLeft = 5 * 60;
+
+            // Запускаем таймер
+            startTimer();
+
+            // Показываем первый иероглиф
+            showNextCharacter();
+
+            // Переключаем видимость секций
+            testResultsSection.style.display = 'none';
+            testCardSection.style.display = 'flex';
+        }
+
+        function newTest() {
+            // Начинаем новый тест с новыми иероглифами
+            startTest();
+        }
+
+        function finishTesting() {
+            // Возвращаемся к начальному экрану теста
+            testResultsSection.style.display = 'none';
+            testStartSection.style.display = 'flex';
+        }
+
+        // Исправленный обработчик переключения вкладок
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 // Удаляем активный класс у всех вкладок и секций
                 tabs.forEach(t => t.classList.remove('active'));
-                contentSections.forEach(s => s.classList.remove('active'));
+                contentSections.forEach(s => {
+                    if (s) s.classList.remove('active'); // Проверяем существование элемента
+                });
 
                 // Добавляем активный класс к выбранной вкладке и секции
                 tab.classList.add('active');
                 const tabId = tab.getAttribute('data-tab');
-                document.getElementById(`${tabId}-section`).classList.add('active');
+                const section = document.getElementById(`${tabId}-section`);
+                if (section) section.classList.add('active'); // Проверяем существование секции
             });
         });
 
@@ -1781,6 +2176,14 @@
         categoryFilter.addEventListener('change', filterCharacters);
         dialoguesSearchInput.addEventListener('input', filterDialogues);
         dialoguesModuleFilter.addEventListener('change', filterDialogues);
+
+        // Слушатели для теста
+        startTestBtn.addEventListener('click', startTest);
+        rememberBtn.addEventListener('click', rememberCharacter);
+        forgetBtn.addEventListener('click', forgetCharacter);
+        restartTestBtn.addEventListener('click', restartTest);
+        newTestBtn.addEventListener('click', newTest);
+        finishTestBtn.addEventListener('click', finishTesting);
 
         // Инициализация при загрузке
         window.addEventListener('DOMContentLoaded', () => {
