@@ -542,6 +542,109 @@
             background-color: #1a252f;
         }
 
+        /* Стили для теста с вариантами */
+        .test-options-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .test-question {
+            font-size: 2rem;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .test-question.chinese {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 4rem;
+        }
+
+        .test-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .test-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .test-option-btn {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .test-option-btn:hover {
+            border-color: var(--secondary-color);
+            background-color: #f8f9fa;
+        }
+
+        .test-option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .test-option-btn.incorrect {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .test-options-progress {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .test-mode-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .test-mode-btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--secondary-color);
+            background-color: white;
+            color: var(--secondary-color);
+        }
+
+        .test-mode-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .test-mode-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .character-symbol {
                 font-size: 3rem;
@@ -576,6 +679,10 @@
                 flex-direction: column;
                 gap: 10px;
             }
+
+            .test-question.chinese {
+                font-size: 3rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -593,6 +700,14 @@
 
             .test-character {
                 font-size: 4rem;
+            }
+
+            .test-question.chinese {
+                font-size: 2.5rem;
+            }
+
+            .test-mode-selector {
+                flex-direction: column;
             }
         }
     </style>
@@ -675,10 +790,26 @@
             <div class="test-container">
                 <div class="test-start" id="test-start">
                     <h2>Тест на знание иероглифов</h2>
-                    <p>Вам будет показано 10 случайных иероглифов. По каждому иероглифу нужно решить, помните ли вы его
-                        значение.</p>
-                    <p>У вас будет 5 минут на прохождение теста.</p>
-                    <button class="test-start-btn" id="start-test-btn">Начать тест</button>
+                    <p>Выберите тип теста:</p>
+
+                    <div class="test-mode-selector">
+                        <button class="test-mode-btn active" data-test-mode="remember">Помню/Не помню</button>
+                        <button class="test-mode-btn" data-test-mode="options">Варианты ответов</button>
+                    </div>
+
+                    <div id="remember-test-description">
+                        <p>Вам будет показано 10 случайных иероглифов. По каждому иероглифу нужно решить, помните ли вы
+                            его значение.</p>
+                        <p>У вас будет 5 минут на прохождение теста.</p>
+                        <button class="test-start-btn" id="start-test-btn">Начать тест</button>
+                    </div>
+
+                    <div id="options-test-description" style="display: none;">
+                        <p>Вам будет показано 20 вопросов - иероглиф или перевод, нужно выбрать правильный вариант из
+                            предложенных.</p>
+                        <p>У вас будет 5 минут на прохождение теста.</p>
+                        <button class="test-start-btn" id="start-options-test-btn">Начать тест</button>
+                    </div>
                 </div>
 
                 <div class="test-card" id="test-card">
@@ -689,6 +820,13 @@
                         <button class="test-btn test-btn-forget" id="forget-btn">Не помню</button>
                     </div>
                     <div class="test-progress" id="test-progress">Вопрос 1 из 10</div>
+                </div>
+
+                <div class="test-options-card" id="test-options-card">
+                    <div class="test-timer" id="options-test-timer">Осталось времени: 5:00</div>
+                    <div class="test-question" id="test-question"></div>
+                    <div class="test-options" id="test-options"></div>
+                    <div class="test-options-progress" id="test-options-progress">Вопрос 1 из 20</div>
                 </div>
 
                 <div class="test-results" id="test-results">
@@ -1816,7 +1954,45 @@
                     },
                 ],
                 category: "диалог"
-            }
+            },
+            {
+                title: "Пустой",
+                module: "3",
+                lines: [
+                    {
+                        symbol: "",
+                        pinyin: "",
+                        translation: "",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "",
+                        pinyin: "",
+                        translation: "",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
+            {
+                title: "Пустой",
+                module: "3",
+                lines: [
+                    {
+                        symbol: "",
+                        pinyin: "",
+                        translation: "",
+                        audio: "#"
+                    },
+                    {
+                        symbol: "",
+                        pinyin: "",
+                        translation: "",
+                        audio: "#"
+                    },
+                ],
+                category: "диалог"
+            },
         ];
 
         // DOM элементы
@@ -1832,18 +2008,27 @@
         // Элементы теста
         const testStartSection = document.getElementById('test-start');
         const testCardSection = document.getElementById('test-card');
+        const testOptionsCardSection = document.getElementById('test-options-card');
         const testResultsSection = document.getElementById('test-results');
         const startTestBtn = document.getElementById('start-test-btn');
+        const startOptionsTestBtn = document.getElementById('start-options-test-btn');
         const rememberBtn = document.getElementById('remember-btn');
         const forgetBtn = document.getElementById('forget-btn');
         const testCharacterElement = document.getElementById('test-character');
+        const testQuestionElement = document.getElementById('test-question');
+        const testOptionsElement = document.getElementById('test-options');
         const testTimerElement = document.getElementById('test-timer');
+        const optionsTestTimerElement = document.getElementById('options-test-timer');
         const testProgressElement = document.getElementById('test-progress');
+        const testOptionsProgressElement = document.getElementById('test-options-progress');
         const testStatsElement = document.getElementById('test-stats');
         const testResultsListElement = document.getElementById('test-results-list');
         const restartTestBtn = document.getElementById('restart-test-btn');
         const newTestBtn = document.getElementById('new-test-btn');
         const finishTestBtn = document.getElementById('finish-test-btn');
+        const testModeBtns = document.querySelectorAll('.test-mode-btn');
+        const rememberTestDescription = document.getElementById('remember-test-description');
+        const optionsTestDescription = document.getElementById('options-test-description');
 
         // Переменные для теста
         let testCharacters = [];
@@ -1854,6 +2039,9 @@
         let testEndTime;
         let timerInterval;
         let timeLeft = 5 * 60; // 5 минут в секундах
+        let testMode = 'remember'; // 'remember' или 'options'
+        let testResults = [];
+        let correctAnswersCount = 0;
 
         // Функция для удаления тонов из пиньиня
         function removeTones(pinyin) {
@@ -2005,7 +2193,7 @@
             displayDialogues(filtered);
         }
 
-        // Функции для теста
+        // Функции для теста "Помню/Не помню"
         function startTest() {
             // Выбираем 10 случайных иероглифов
             testCharacters = getRandomCharacters(10);
@@ -2023,6 +2211,29 @@
             // Переключаем видимость секций
             testStartSection.style.display = 'none';
             testCardSection.style.display = 'flex';
+            testOptionsCardSection.style.display = 'none';
+            testResultsSection.style.display = 'none';
+        }
+
+        // Функции для теста с вариантами ответов
+        function startOptionsTest() {
+            // Выбираем 20 случайных иероглифов
+            testCharacters = getRandomCharacters(20);
+            currentTestIndex = 0;
+            correctAnswersCount = 0;
+            testResults = [];
+            timeLeft = 5 * 60; // 5 минут в секундах
+
+            // Запускаем таймер
+            startOptionsTimer();
+
+            // Показываем первый вопрос
+            showNextQuestion();
+
+            // Переключаем видимость секций
+            testStartSection.style.display = 'none';
+            testCardSection.style.display = 'none';
+            testOptionsCardSection.style.display = 'flex';
             testResultsSection.style.display = 'none';
         }
 
@@ -2046,10 +2257,30 @@
             }, 1000);
         }
 
+        function startOptionsTimer() {
+            testStartTime = new Date();
+            updateOptionsTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateOptionsTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    finishOptionsTest();
+                }
+            }, 1000);
+        }
+
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             testTimerElement.textContent = `Осталось времени: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function updateOptionsTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            optionsTestTimerElement.textContent = `Осталось времени: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
 
         function showNextCharacter() {
@@ -2060,6 +2291,99 @@
 
             testCharacterElement.textContent = testCharacters[currentTestIndex].symbol;
             testProgressElement.textContent = `Вопрос ${currentTestIndex + 1} из ${testCharacters.length}`;
+        }
+
+        function showNextQuestion() {
+            if (currentTestIndex >= testCharacters.length) {
+                finishOptionsTest();
+                return;
+            }
+
+            const currentChar = testCharacters[currentTestIndex];
+            testOptionsProgressElement.textContent = `Вопрос ${currentTestIndex + 1} из ${testCharacters.length}`;
+
+            // Случайно выбираем, показывать иероглиф или перевод
+            const showChinese = Math.random() > 0.5;
+
+            if (showChinese) {
+                testQuestionElement.textContent = currentChar.symbol;
+                testQuestionElement.className = 'test-question chinese';
+                generateOptions(currentChar, false);
+            } else {
+                testQuestionElement.textContent = currentChar.translation;
+                testQuestionElement.className = 'test-question';
+                generateOptions(currentChar, true);
+            }
+        }
+
+        function generateOptions(correctChar, isTranslationQuestion) {
+            testOptionsElement.innerHTML = '';
+
+            // Создаем массив с правильным ответом
+            let options = [{
+                char: correctChar,
+                isCorrect: true
+            }];
+
+            // Добавляем 5 случайных неправильных ответов
+            const allChars = [...characters].filter(c => c.symbol !== correctChar.symbol);
+            const shuffled = allChars.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+            shuffled.forEach(char => {
+                options.push({
+                    char: char,
+                    isCorrect: false
+                });
+            });
+
+            // Перемешиваем варианты
+            options = options.sort(() => 0.5 - Math.random());
+
+            // Создаем кнопки вариантов
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'test-option-btn';
+
+                if (isTranslationQuestion) {
+                    btn.textContent = option.char.symbol;
+                } else {
+                    btn.textContent = option.char.translation;
+                }
+
+                btn.addEventListener('click', () => checkAnswer(option.isCorrect, option.char, correctChar, isTranslationQuestion));
+                testOptionsElement.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect, selectedChar, correctChar, isTranslationQuestion) {
+            // Записываем результат
+            testResults.push({
+                question: correctChar,
+                selected: selectedChar,
+                isCorrect: isCorrect
+            });
+
+            // Подсвечиваем правильный и неправильный ответы
+            const optionBtns = document.querySelectorAll('.test-option-btn');
+            //let isTranslationQuestion = false; //!!!!!!!
+            optionBtns.forEach(btn => {
+                const btnText = isTranslationQuestion ? correctChar.symbol : correctChar.translation;
+                if (btn.textContent === (isTranslationQuestion ? correctChar.symbol : correctChar.translation)) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === (isTranslationQuestion ? selectedChar.symbol : selectedChar.translation) && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                correctAnswersCount++;
+            }
+
+            // Через секунду переходим к следующему вопросу
+            setTimeout(() => {
+                currentTestIndex++;
+                showNextQuestion();
+            }, 1000);
         }
 
         function rememberCharacter() {
@@ -2090,6 +2414,25 @@
 
             // Переключаем видимость секций
             testCardSection.style.display = 'none';
+            testOptionsCardSection.style.display = 'none';
+            testResultsSection.style.display = 'flex';
+        }
+
+        function finishOptionsTest() {
+            clearInterval(timerInterval);
+            testEndTime = new Date();
+
+            // Рассчитываем время прохождения теста
+            const timeSpent = Math.floor((testEndTime - testStartTime) / 1000);
+            const minutes = Math.floor(timeSpent / 60);
+            const seconds = timeSpent % 60;
+
+            // Показываем результаты
+            showOptionsResults(minutes, seconds);
+
+            // Переключаем видимость секций
+            testCardSection.style.display = 'none';
+            testOptionsCardSection.style.display = 'none';
             testResultsSection.style.display = 'flex';
         }
 
@@ -2100,8 +2443,8 @@
                 <br>
                 Правильных ответов: ${rememberedCount}
                 <br>
-                Неправильных ответов:${forgottenCount}
-        `;
+                Неправильных ответов: ${forgottenCount}
+            `;
 
             // Показываем список иероглифов
             testResultsListElement.innerHTML = '';
@@ -2111,7 +2454,7 @@
                 item.className = 'test-result-item';
 
                 item.innerHTML = `
-                <div class="test-result-symbol" > ${char.symbol}</div>
+                    <div class="test-result-symbol">${char.symbol}</div>
                     <div class="test-result-info">
                         <div class="test-result-pinyin">${char.pinyin}</div>
                         <div class="test-result-translation">${char.translation}</div>
@@ -2119,39 +2462,117 @@
                     <div class="test-result-status ${char.remembered ? 'test-result-remembered' : 'test-result-forgotten'}">
                         ${char.remembered ? 'Помню' : 'Не помню'}
                     </div>
-        `;
+                `;
+
+                testResultsListElement.appendChild(item);
+            });
+        }
+
+        function showOptionsResults(minutes, seconds) {
+            // Обновляем статистику
+            testStatsElement.innerHTML = `
+                Вы завершили тест за ${minutes}:${seconds < 10 ? '0' : ''}${seconds}
+                <br>
+                Правильных ответов: ${correctAnswersCount} из ${testCharacters.length}
+                <br>
+                Процент правильных ответов: ${Math.round((correctAnswersCount / testCharacters.length) * 100)}%
+            `;
+
+            // Показываем список вопросов и ответов
+            testResultsListElement.innerHTML = '';
+
+            testResults.forEach((result, index) => {
+                const item = document.createElement('div');
+                item.className = 'test-result-item';
+
+                item.innerHTML = `
+                    <div class="test-result-symbol">${result.question.symbol}</div>
+                    <div class="test-result-info">
+                        <div class="test-result-pinyin">${result.question.pinyin}</div>
+                        <div class="test-result-translation">${result.question.translation}</div>
+                        <div class="test-result-answer">Ваш ответ: ${result.selected.translation}</div>
+                    </div>
+                    <div class="test-result-status ${result.isCorrect ? 'test-result-remembered' : 'test-result-forgotten'}">
+                        ${result.isCorrect ? 'Правильно' : 'Неправильно'}
+                    </div>
+                `;
 
                 testResultsListElement.appendChild(item);
             });
         }
 
         function restartTest() {
-            // Сбрасываем индексы и счетчики
-            currentTestIndex = 0;
-            rememberedCount = 0;
-            forgottenCount = 0;
-            timeLeft = 5 * 60;
+            if (testMode === 'remember') {
+                // Сбрасываем индексы и счетчики
+                currentTestIndex = 0;
+                rememberedCount = 0;
+                forgottenCount = 0;
+                timeLeft = 5 * 60;
 
-            // Запускаем таймер
-            startTimer();
+                // Запускаем таймер
+                startTimer();
 
-            // Показываем первый иероглиф
-            showNextCharacter();
+                // Показываем первый иероглиф
+                showNextCharacter();
+            } else {
+                // Сбрасываем индексы и счетчики
+                currentTestIndex = 0;
+                correctAnswersCount = 0;
+                testResults = [];
+                timeLeft = 5 * 60;
+
+                // Запускаем таймер
+                startOptionsTimer();
+
+                // Показываем первый вопрос
+                showNextQuestion();
+            }
 
             // Переключаем видимость секций
             testResultsSection.style.display = 'none';
-            testCardSection.style.display = 'flex';
+
+            if (testMode === 'remember') {
+                testCardSection.style.display = 'flex';
+                testOptionsCardSection.style.display = 'none';
+            } else {
+                testCardSection.style.display = 'none';
+                testOptionsCardSection.style.display = 'flex';
+            }
         }
 
         function newTest() {
-            // Начинаем новый тест с новыми иероглифами
-            startTest();
+            if (testMode === 'remember') {
+                startTest();
+            } else {
+                startOptionsTest();
+            }
         }
 
         function finishTesting() {
             // Возвращаемся к начальному экрану теста
             testResultsSection.style.display = 'none';
             testStartSection.style.display = 'flex';
+        }
+
+        function setTestMode(mode) {
+            testMode = mode;
+
+            // Обновляем активную кнопку
+            testModeBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.testMode === mode) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Показываем соответствующее описание
+            if (mode === 'remember') {
+                rememberTestDescription.style.display = 'block';
+                optionsTestDescription.style.display = 'none';
+            } else {
+                rememberTestDescription.style.display = 'none';
+                optionsTestDescription.style.display = 'block';
+            }
         }
 
         // Исправленный обработчик переключения вкладок
@@ -2179,16 +2600,23 @@
 
         // Слушатели для теста
         startTestBtn.addEventListener('click', startTest);
+        startOptionsTestBtn.addEventListener('click', startOptionsTest);
         rememberBtn.addEventListener('click', rememberCharacter);
         forgetBtn.addEventListener('click', forgetCharacter);
         restartTestBtn.addEventListener('click', restartTest);
         newTestBtn.addEventListener('click', newTest);
         finishTestBtn.addEventListener('click', finishTesting);
 
+        // Слушатели для выбора режима теста
+        testModeBtns.forEach(btn => {
+            btn.addEventListener('click', () => setTestMode(btn.dataset.testMode));
+        });
+
         // Инициализация при загрузке
         window.addEventListener('DOMContentLoaded', () => {
             displayCharacters(characters);
             filterDialogues(); // Инициализируем отображение диалогов с фильтрацией
+            setTestMode('remember'); // Устанавливаем режим теста по умолчанию
         });
     </script>
 </body>
